@@ -1,37 +1,12 @@
 package com.switchfully.eurder.eurder.domain;
 
-public class Customer {
-    private final String firstname;
-    private final String lastname;
-    private final String email;
-    private final String address;
-    private final String phoneNumber;
+import jakarta.validation.constraints.NotBlank;
 
-    public Customer(String firstname, String lastname, String email, String address, String phoneNumber) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+public record Customer(
+        @NotBlank String firstname,
+        @NotBlank String lastname,
+        @NotBlank String email,
+        @NotBlank String address,
+        @NotBlank String phoneNumber
+) {
 }

@@ -3,20 +3,24 @@ package com.switchfully.eurder.eurder.api;
 import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.service.CustomerService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-@RestController(value = "customers")
+@RestController
+@RequestMapping(value = "customers")
 public class CustomerController {
+    private static final String APPLICATION_JSON = "application/json";
+
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
-    @PostMapping
-    public CustomerDTO addCustomer(@RequestBody CreateCustomerDTO createCustomerDTO) {
+    @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerDTO addCustomer(@Valid @RequestBody CreateCustomerDTO createCustomerDTO) {
         return customerService.addCustomer(createCustomerDTO);
     }
 }

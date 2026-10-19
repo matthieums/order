@@ -10,8 +10,8 @@ public class CustomerMapper {
         if (customer == null) return null;
 
         return new CustomerDTO(
-                customer.getFirstname(),
-                customer.getLastname()
+                customer.firstname(),
+                customer.lastname()
         );
     }
 

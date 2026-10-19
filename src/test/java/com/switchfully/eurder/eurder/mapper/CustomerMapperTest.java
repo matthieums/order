@@ -18,7 +18,7 @@ class CustomerMapperTest {
                 "userAddress - 5555",
                 "04 555 555 555"
         );
-        CustomerDTO expected = new CustomerDTO(customer.getFirstname(), customer.getLastname());
+        CustomerDTO expected = new CustomerDTO(customer.firstname(), customer.lastname());
 
         assertThat(CustomerMapper.toDTO(customer))
                 .usingRecursiveComparison()
