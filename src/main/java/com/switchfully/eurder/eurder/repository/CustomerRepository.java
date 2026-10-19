@@ -25,7 +25,7 @@ public class CustomerRepository {
         return customer;
     }
 
-    public boolean exists(Customer customer) {
+    public boolean contains(Customer customer) {
         return customers.containsValue(customer);
     }
 }

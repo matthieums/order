@@ -20,6 +20,6 @@ class CustomerRepositoryTest {
 
         customerRepository.addCustomer(newCustomer);
 
-        assertTrue(customerRepository.exists(newCustomer));
+        assertTrue(customerRepository.contains(newCustomer));
     }
 }

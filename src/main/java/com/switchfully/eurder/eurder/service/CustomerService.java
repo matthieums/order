@@ -16,7 +16,7 @@ public class CustomerService {
     }
 
     public CustomerDTO addCustomer(CreateCustomerDTO dto) {
-        Customer customer = customerRepository.addCustomer(CustomerMapper.toCustomer(dto));
+        Customer customer = customerRepository.addCustomer(CustomerMapper.toObject(dto));
         return CustomerMapper.toDTO(customer);
     }
 }

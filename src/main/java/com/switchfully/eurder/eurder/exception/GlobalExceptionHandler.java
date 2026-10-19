@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(CustomerAlreadyExistsException.class)
+    @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<String> handleDuplicate(CustomerAlreadyExistsException e) {
         logger.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

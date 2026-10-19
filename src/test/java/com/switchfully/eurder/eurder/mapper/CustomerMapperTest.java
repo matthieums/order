@@ -35,7 +35,7 @@ class CustomerMapperTest {
                 "04 555 555 555"
         );
 
-        assertThat(CustomerMapper.toCustomer(dto))
+        assertThat(CustomerMapper.toObject(dto))
                 .usingRecursiveComparison()
                 .isEqualTo(
                         new Customer(

@@ -15,7 +15,7 @@ public class CustomerMapper {
         );
     }
 
-    public static Customer toCustomer(CreateCustomerDTO dto) {
+    public static Customer toObject(CreateCustomerDTO dto) {
         return new Customer(
                 dto.getFirstname(),
                 dto.getLastname(),
