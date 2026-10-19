@@ -1,11 +1,11 @@
 package com.switchfully.eurder.eurder.mapper;
 
+import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.domain.Customer;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerMapperTest {
 
@@ -18,11 +18,33 @@ class CustomerMapperTest {
                 "userAddress - 5555",
                 "04 555 555 555"
         );
-
         CustomerDTO expected = new CustomerDTO(customer.getFirstname(), customer.getLastname());
 
         assertThat(CustomerMapper.toDTO(customer))
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
+    }
+
+    @Test
+    void givenACreateCustomerDTO_whenToMember_thenReturnAMemberWithAppropriateValues() {
+        CreateCustomerDTO dto = new CreateCustomerDTO(
+                "newUser",
+                "user",
+                "user@dto.com",
+                "userAddress - 5555",
+                "04 555 555 555"
+        );
+
+        assertThat(CustomerMapper.toCustomer(dto))
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        new Customer(
+                                dto.getFirstname(),
+                                dto.getLastname(),
+                                dto.getEmail(),
+                                dto.getAddress(),
+                                dto.getPhoneNumber()
+                        )
+            );
     }
 }

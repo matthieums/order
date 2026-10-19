@@ -1,5 +1,6 @@
 package com.switchfully.eurder.eurder.mapper;
 
+import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.domain.Customer;
 
@@ -11,6 +12,16 @@ public class CustomerMapper {
         return new CustomerDTO(
                 customer.getFirstname(),
                 customer.getLastname()
+        );
+    }
+
+    public static Customer toCustomer(CreateCustomerDTO dto) {
+        return new Customer(
+                dto.getFirstname(),
+                dto.getLastname(),
+                dto.getEmail(),
+                dto.getAddress(),
+                dto.getPhoneNumber()
         );
     }
 }
