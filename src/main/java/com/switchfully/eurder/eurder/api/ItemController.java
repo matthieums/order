@@ -23,4 +23,10 @@ public class ItemController {
     public ItemDTO addItem(@Valid @RequestBody CreateItemDTO createItemDTO) {
         return itemService.addItem(createItemDTO);
     }
+
+    @PutMapping(value = {"/{id}"}, consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ItemDTO updateItem(@Valid @RequestBody CreateItemDTO createItemDTO, @PathVariable String id) {
+        return itemService.updateItem(id, createItemDTO);
+    }
 }
