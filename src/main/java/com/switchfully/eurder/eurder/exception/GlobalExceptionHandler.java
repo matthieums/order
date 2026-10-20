@@ -12,8 +12,14 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AlreadyExistsException.class)
-    public ResponseEntity<String> handleDuplicate(CustomerAlreadyExistsException e) {
+    public ResponseEntity<String> handleDuplicate(AlreadyExistsException e) {
         logger.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(DoesNotExistException.class)
+    public ResponseEntity<String> handleInexistent(DoesNotExistException e) {
+        logger.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

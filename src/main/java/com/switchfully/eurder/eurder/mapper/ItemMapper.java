@@ -10,10 +10,10 @@ public class ItemMapper{
         if (item == null) return null;
 
         return new ItemDTO(
-                item.name(),
-                item.description(),
-                item.price(),
-                item.amount()
+                item.getName(),
+                item.getDescription(),
+                item.getPrice(),
+                item.getAmount()
         );
     }
 

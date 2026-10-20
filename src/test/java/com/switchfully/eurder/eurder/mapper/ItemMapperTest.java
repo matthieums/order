@@ -22,10 +22,10 @@ class ItemMapperTest {
         );
 
         ItemDTO expected = new ItemDTO(
-                item.name(),
-                item.description(),
-                item.price(),
-                item.amount()
+                item.getName(),
+                item.getDescription(),
+                item.getPrice(),
+                item.getAmount()
         );
 
         assertThat(ItemMapper.toDTO(item))
@@ -42,16 +42,13 @@ class ItemMapperTest {
                 10
         );
 
-        assertThat(ItemMapper.toObject(dto))
-                .usingRecursiveComparison()
-                .isEqualTo(
-                        new Item(
-                                dto.getName(),
-                                dto.getDescription(),
-                                dto.getPrice(),
-                                dto.getAmount()
-                        )
-                );
+        Item item = ItemMapper.toObject(dto);
+
+        assertThat(item.getName()).isEqualTo(dto.getName());
+        assertThat(item.getDescription()).isEqualTo(dto.getDescription());
+        assertThat(item.getPrice()).isEqualTo(dto.getPrice());
+        assertThat(item.getAmount()).isEqualTo(dto.getAmount());
+        assertThat(item.getId()).isNotNull();
     }
 }
 
