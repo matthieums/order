@@ -6,6 +6,7 @@ import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +27,12 @@ public class ItemRepository {
         }
 
         return item;
+    }
+
+    public List<Item> addItems(List<Item> items) {
+        return items.stream()
+                .map(this::addItem)
+                .toList();
     }
 
     public Item updateItem(String id, Item item) {
@@ -64,7 +71,10 @@ public class ItemRepository {
                        item.getAmount() - requiredAMount
                        )
        );
+    }
 
+    public double getPrice(String itemId) {
+        return availableItems.get(itemId).getPrice();
     }
 
     public void remove(Item item) {

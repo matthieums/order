@@ -6,6 +6,7 @@ import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
+import com.switchfully.eurder.eurder.repository.ItemRepository;
 
 public class OrderMapper {
 
@@ -14,17 +15,9 @@ public class OrderMapper {
 
         return new OrderDTO(
                 order.getId(),
-                order.getItemGroups(),
-                order.getPlaced_by()
+                ItemGroupMapper.toDTO(order.getItemGroups()),
+                order.getTotalPrice()
         );
     }
-
-    public static Eurder toObject(CreateOrderDTO dto) {
-        return new Eurder(
-                dto.itemGroups(),
-                dto.placedBy()
-        );
-    }
-
 
 }

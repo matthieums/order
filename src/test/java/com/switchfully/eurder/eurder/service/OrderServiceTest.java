@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 class OrderServiceTest {
     private OrderService orderService;
@@ -43,9 +44,9 @@ class OrderServiceTest {
         Item item2 = new Item("item2", "an item", 5.0, 20);
 
         CreateOrderDTO validCreateOrderDTO = new CreateOrderDTO(
-                List.of(
-                        new ItemGroup(item1.getId(), 1),
-                        new ItemGroup(item2.getId(), 1)
+                Map.of(
+                        item1.getId(), item1.getAmount(),
+                        item2.getId(), item2.getAmount()
                 ),
                 customer.email()
         );
@@ -60,34 +61,35 @@ class OrderServiceTest {
         Item item1 = new Item("item1", "an item", 5.0, 20);
         itemRepository.addItem(item1);
         CreateOrderDTO validCreateOrderDTO = new CreateOrderDTO(
-                List.of(
-                        new ItemGroup(item1.getId(), 1)
+                Map.of(
+                        item1.getId(), item1.getAmount()
                 ),
                 customer.email()
         );
-        OrderDTO order = orderService.addOrder(validCreateOrderDTO);
+        OrderDTO orderDTO = orderService.addOrder(validCreateOrderDTO);
+        Eurder order = orderRepository.getOrderById(orderDTO.id());
 
         LocalDate expectedDate = LocalDate.now().plusDays(1);
 
-        Assertions.assertThat(order.items().getFirst().getShippingDate().equals(expectedDate));
-
+        Assertions.assertThat(order.getItemGroups().getFirst().getShippingDate().equals(expectedDate));
     }
 
     @Test
     void givenOrderOfItemWithoutStock_whenSetShippingDate_thenDateSetToDayPlus7() {
         Item item1 = new Item("item1", "an item", 5.0, 0);
         itemRepository.addItem(item1);
-        OrderDTO order = orderService.addOrder(new CreateOrderDTO(
-                        List.of(
-                                new ItemGroup(item1.getId(), 1)
+        OrderDTO orderDTO = orderService.addOrder(new CreateOrderDTO(
+                        Map.of(
+                                item1.getId(), item1.getAmount()
                         ),
                         customer.email()
                 )
         );
 
-        LocalDate expectedDate = LocalDate.now().plusDays(7);
-        Assertions.assertThat(order.items().getFirst().getShippingDate().equals(expectedDate));
+        Eurder order = orderRepository.getOrderById(orderDTO.id());
 
+        LocalDate expectedDate = LocalDate.now().plusDays(7);
+        Assertions.assertThat(order.getItemGroups().getFirst().getShippingDate().equals(expectedDate));
     }
 
     @Test
@@ -99,9 +101,11 @@ class OrderServiceTest {
 
         OrderDTO order = orderService.addOrder(
                 new CreateOrderDTO(
-                        List.of(new ItemGroup(item1.getId(), 5),
-                                new ItemGroup(item2.getId(), 5))
-                        , customer.email())
+                        Map.of(
+                                item1.getId(), item1.getAmount(),
+                                item2.getId(), item2.getAmount()
+                        ),
+                        customer.email())
         );
 
         List<ItemGroup> itemGroups = orderRepository.getOrderById(order.id()).getItemGroups();
@@ -121,7 +125,10 @@ class OrderServiceTest {
 
         OrderDTO order = orderService.addOrder(
                 new CreateOrderDTO(
-                        List.of(new ItemGroup(unavailableItem.getId(), 1)),
+                        Map.of(
+                                unavailableItem.getId(), unavailableItem.getAmount(),
+                                unavailableItem.getId(), unavailableItem.getAmount()
+                        ),
                         customer.email())
         );
 

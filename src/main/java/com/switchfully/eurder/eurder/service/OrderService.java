@@ -2,9 +2,12 @@ package com.switchfully.eurder.eurder.service;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateOrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
+import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
+import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.domain.ItemGroup;
 import com.switchfully.eurder.eurder.mapper.OrderMapper;
+import com.switchfully.eurder.eurder.mapper.ReportMapper;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import com.switchfully.eurder.eurder.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -23,8 +26,19 @@ public class OrderService {
     }
 
     public OrderDTO addOrder(CreateOrderDTO dto) {
-        Eurder order = OrderMapper.toObject(dto);
-        List<ItemGroup> groups = order.getItemGroups();
+        List<ItemGroup> groups = dto.itemIdsToAmounts().entrySet().stream()
+                .map(group -> {
+                    Item item = itemRepository.getById(group.getKey());
+                    return new ItemGroup(
+                            item.getId(),
+                            item.getName(),
+                            group.getValue(),
+                            item.getPrice()
+                    );
+                })
+                .toList();
+
+        Eurder order = new Eurder(groups, dto.placedBy());
 
         groups.forEach(group -> {
                     boolean immediatelyAvailable = setShippingDateBasedOnStock(group);
@@ -56,5 +70,10 @@ public class OrderService {
         );
 
         return available;
+    }
+
+    public ReportDTO getReportForCustomerWithId(String mail) {
+         List<Eurder> customerOrders = orderRepository.getOrdersOfCustomer(mail);
+         return ReportMapper.toDto(customerOrders);
     }
 }
