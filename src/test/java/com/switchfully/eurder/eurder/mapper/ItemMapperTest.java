@@ -22,6 +22,7 @@ class ItemMapperTest {
         );
 
         ItemDTO expected = new ItemDTO(
+                item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getPrice(),

@@ -28,6 +28,10 @@ public class ItemRepository {
         return item;
     }
 
+    public Item updateItem(String id, Item item) {
+        availableItems.put(id, item);
+        return item;
+    }
 
     public boolean contains(Item item) {
         return availableItems.containsValue(item);

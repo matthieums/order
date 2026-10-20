@@ -19,4 +19,9 @@ public class ItemService {
         Item item = itemRepository.addItem(ItemMapper.toObject(dto));
         return ItemMapper.toDTO(item);
     }
+
+    public ItemDTO updateItem(String itemId, CreateItemDTO dto) {
+        Item item = itemRepository.updateItem(itemId, ItemMapper.toObject(dto));
+        return ItemMapper.toDTO(item);
+    }
 }
