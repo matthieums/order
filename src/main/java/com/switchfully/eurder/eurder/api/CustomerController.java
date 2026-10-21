@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "customers")
 public class CustomerController {
@@ -16,6 +18,12 @@ public class CustomerController {
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
+    }
+
+    @GetMapping(produces = APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerDTO> viewCustomers() {
+        return customerService.getAll();
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)

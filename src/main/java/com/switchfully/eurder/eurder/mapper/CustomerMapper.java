@@ -4,6 +4,8 @@ import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.domain.Customer;
 
+import java.util.List;
+
 public class CustomerMapper {
 
     public static CustomerDTO toDTO(Customer customer) {
@@ -13,6 +15,12 @@ public class CustomerMapper {
                 customer.firstname(),
                 customer.lastname()
         );
+    }
+
+    public static List<CustomerDTO> toDTO(List<Customer> customers) {
+        return customers.stream()
+                .map(CustomerMapper::toDTO)
+                .toList();
     }
 
     public static Customer toObject(CreateCustomerDTO dto) {

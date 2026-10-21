@@ -4,6 +4,8 @@ import com.switchfully.eurder.eurder.domain.Customer;
 import com.switchfully.eurder.eurder.exception.CustomerAlreadyExistsException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,6 +25,10 @@ public class CustomerRepository {
         }
 
         return customer;
+    }
+
+    public List<Customer> getAll() {
+        return new ArrayList<>(customers.values());
     }
 
     public boolean contains(Customer customer) {
