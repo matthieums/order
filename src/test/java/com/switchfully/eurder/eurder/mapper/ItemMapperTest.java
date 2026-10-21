@@ -1,14 +1,11 @@
 package com.switchfully.eurder.eurder.mapper;
 
-import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
-import com.switchfully.eurder.eurder.domain.Customer;
 import com.switchfully.eurder.eurder.domain.Item;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ItemMapperTest {
 

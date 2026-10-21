@@ -2,7 +2,7 @@ package com.switchfully.eurder.eurder.mapper;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
-import com.switchfully.eurder.eurder.domain.Customer;
+import com.switchfully.eurder.eurder.domain.user.Customer;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ public class CustomerMapper {
         if (customer == null) return null;
 
         return new CustomerDTO(
-                customer.firstname(),
-                customer.lastname(),
-                customer.email(),
-                customer.address(),
-                customer.phoneNumber()
+                customer.getFirstname(),
+                customer.getLastname(),
+                customer.getEmail(),
+                customer.getAddress(),
+                customer.getPhoneNumber()
         );
     }
 
@@ -31,6 +31,7 @@ public class CustomerMapper {
                 dto.getFirstname(),
                 dto.getLastname(),
                 dto.getEmail(),
+                dto.getPassword(),
                 dto.getAddress(),
                 dto.getPhoneNumber()
         );

@@ -2,8 +2,10 @@ package com.switchfully.eurder.eurder.api;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
-import com.switchfully.eurder.eurder.domain.Customer;
-import com.switchfully.eurder.eurder.repository.CustomerRepository;
+import com.switchfully.eurder.eurder.domain.user.Customer;
+import com.switchfully.eurder.eurder.factory.CreateCustomerDTOFactory;
+import com.switchfully.eurder.eurder.factory.UserFactory;
+import com.switchfully.eurder.eurder.repository.UserRepository;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,6 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CustomerControllerTest {
@@ -25,22 +26,16 @@ class CustomerControllerTest {
     private int port;
 
     @Autowired
-    CustomerRepository customerRepository;
+    UserRepository userRepository;
 
     @BeforeEach
     void setup() {
-        customerRepository.clear();
+        userRepository.clear();
     }
 
     @Test
     void givenValidBody_whenPost_thenReturn201() {
-        CreateCustomerDTO dto = new CreateCustomerDTO(
-                "newUser",
-                "user",
-                "user@dto.com",
-                "userAddress - 5555",
-                "04 555 555 555"
-        );
+        CreateCustomerDTO dto = CreateCustomerDTOFactory.validCreateCustomerDTO();
 
         given()
                 .contentType(ContentType.JSON)
@@ -57,23 +52,11 @@ class CustomerControllerTest {
 
     @Test
     void givenADatabaseWithCustomers_whenGetAll_thenReturnAllCustomers() {
-        customerRepository.addCustomer(
-            new Customer(
-                    "newUser",
-                    "user",
-                    "user1@dto.com",
-                    "userAddress - 5555",
-                    "04 555 555 555"
-            )
+        userRepository.addCustomer(
+                UserFactory.customerWithValidDetails()
         );
-        customerRepository.addCustomer(
-            new Customer(
-                    "newUser",
-                    "user",
-                    "user2@dto.com",
-                    "userAddress - 5555",
-                    "04 555 555 555"
-            )
+        userRepository.addCustomer(
+                UserFactory.customerWithValidDetails()
         );
 
         List<CustomerDTO> customers =
@@ -92,24 +75,19 @@ class CustomerControllerTest {
 
     @Test
     void givenADatabaseWithCustomers_whenGetCustomer_thenReturnCustomerDTO() {
-        customerRepository.addCustomer(
-                new Customer(
-                        "newUser",
-                        "user",
-                        "user1@dto.com",
-                        "userAddress - 5555",
-                        "04 555 555 555"
-                )
+        Customer customer = userRepository.addCustomer(
+                UserFactory.customerWithValidDetails()
         );
-        CustomerDTO customer =
-                given()
-                        .port(port)
-                        .when()
-                        .get("/customers/user1@dto.com")
-                        .then()
-                        .statusCode(200)
-                        .body("email", equalTo("user1@dto.com"))
-                        .extract()
-                        .as(CustomerDTO.class);
+
+        given()
+                .port(port)
+                .when()
+                .get("/customers/" + customer.getEmail())
+                .then()
+                .statusCode(200)
+                .body("email", equalTo(customer.getEmail())
+                );
     }
+
+
 }
