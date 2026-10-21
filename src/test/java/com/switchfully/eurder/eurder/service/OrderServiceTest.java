@@ -2,11 +2,11 @@ package com.switchfully.eurder.eurder.service;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateOrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
-import com.switchfully.eurder.eurder.domain.Customer;
+import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.domain.ItemGroup;
-import com.switchfully.eurder.eurder.mapper.OrderMapper;
+import com.switchfully.eurder.eurder.factory.UserFactory;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import com.switchfully.eurder.eurder.repository.OrderRepository;
 import org.assertj.core.api.Assertions;
@@ -34,13 +34,7 @@ class OrderServiceTest {
     void setup() {
         orderRepository.clear();
         itemRepository.clear();
-        customer = new Customer(
-                "newUser",
-                "user",
-                "user@dto.com",
-                "userAddress - 5555",
-                "04 555 555 555"
-        );
+        customer = UserFactory.customerWithValidDetails();
     }
 
     @Test
@@ -54,7 +48,7 @@ class OrderServiceTest {
                         item1.getId(), item1.getAmount(),
                         item2.getId(), item2.getAmount()
                 ),
-                customer.email()
+                customer.getEmail()
         );
 
         OrderDTO order = orderService.addOrder(validCreateOrderDTO);
@@ -70,7 +64,7 @@ class OrderServiceTest {
                 Map.of(
                         item1.getId(), item1.getAmount()
                 ),
-                customer.email()
+                customer.getEmail()
         );
         OrderDTO orderDTO = orderService.addOrder(validCreateOrderDTO);
         Eurder order = orderRepository.getOrderById(orderDTO.id());
@@ -88,7 +82,7 @@ class OrderServiceTest {
                         Map.of(
                                 item1.getId(), item1.getAmount()
                         ),
-                        customer.email()
+                        customer.getEmail()
                 )
         );
 
@@ -111,7 +105,7 @@ class OrderServiceTest {
                                 item1.getId(), item1.getAmount(),
                                 item2.getId(), item2.getAmount()
                         ),
-                        customer.email())
+                        customer.getEmail())
         );
 
         List<ItemGroup> itemGroups = orderRepository.getOrderById(order.id()).getItemGroups();
@@ -134,7 +128,7 @@ class OrderServiceTest {
                         Map.of(
                                 unavailableItem.getId(), 1
                         ),
-                        customer.email())
+                        customer.getEmail())
         );
 
         List<ItemGroup> itemGroups =

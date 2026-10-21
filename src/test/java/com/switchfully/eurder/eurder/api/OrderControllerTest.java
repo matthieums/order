@@ -1,16 +1,14 @@
 package com.switchfully.eurder.eurder.api;
 
-import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.CreateOrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
-import com.switchfully.eurder.eurder.domain.Customer;
+import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.domain.Item;
-import com.switchfully.eurder.eurder.domain.ItemGroup;
+import com.switchfully.eurder.eurder.factory.UserFactory;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import com.switchfully.eurder.eurder.service.OrderService;
 import io.restassured.http.ContentType;
-import org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +35,7 @@ public class OrderControllerTest {
     @BeforeEach
     void setup() {
         itemRepository.clear();
-        customer = new Customer(
-                "newUser",
-                "user",
-                "user@dto.com",
-                "userAddress - 5555",
-                "04 555 555 555"
-        );
+        customer = UserFactory.customerWithValidDetails();
     }
 
     private OrderDTO postOrder(CreateOrderDTO dto) {
@@ -79,7 +71,7 @@ public class OrderControllerTest {
                         item1.getId(), 1,
                         item2.getId(), 1
                 ),
-                customer.email()
+                customer.getEmail()
         );
 
         OrderDTO result = postOrder(dto);
@@ -103,20 +95,20 @@ public class OrderControllerTest {
                         item1.getId(), item1.getAmount(),
                         item2.getId(), item2.getAmount()
                 ),
-                customer.email()
+                customer.getEmail()
         );
         CreateOrderDTO dto2 = new CreateOrderDTO(
                 Map.of(
                         item3.getId(), item3.getAmount(),
                         item4.getId(), item4.getAmount()
                 ),
-                customer.email()
+                customer.getEmail()
         );
 
         postOrder(dto1);
         postOrder(dto2);
 
-        ReportDTO report = viewOrders(customer.email());
+        ReportDTO report = viewOrders(customer.getEmail());
 
         assertThat(report).isNotNull();
         assertThat(report.getOrderDTOS()).hasSize(2);

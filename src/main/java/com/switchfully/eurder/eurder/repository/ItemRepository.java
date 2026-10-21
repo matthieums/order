@@ -1,5 +1,6 @@
 package com.switchfully.eurder.eurder.repository;
 
+import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
 import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.exception.ItemAlreadyExistsException;
 import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
@@ -12,7 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class ItemRepository implements Clearable{
+public class ItemRepository extends AppRepository {
     public Map<String, Item> availableItems;
 
     public ItemRepository() {
