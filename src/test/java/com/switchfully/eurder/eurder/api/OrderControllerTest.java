@@ -29,12 +29,14 @@ public class OrderControllerTest {
     private int port;
     @Autowired
     private ItemRepository itemRepository;
-    @Autowired
+
     private OrderService orderService;
+
     private Customer customer;
 
     @BeforeEach
     void setup() {
+        itemRepository.clear();
         customer = new Customer(
                 "newUser",
                 "user",
@@ -70,10 +72,12 @@ public class OrderControllerTest {
     void givenValidBody_whenPost_thenReturn201() {
         Item item1 = new Item("item1", "an item", 5.0, 20);
         Item item2 = new Item("item2", "an item", 5.0, 20);
+        itemRepository.addItems(List.of(item1, item2));
+
         CreateOrderDTO dto = new CreateOrderDTO(
                 Map.of(
-                        item1.getId(), item1.getAmount(),
-                        item2.getId(), item2.getAmount()
+                        item1.getId(), 1,
+                        item2.getId(), 1
                 ),
                 customer.email()
         );

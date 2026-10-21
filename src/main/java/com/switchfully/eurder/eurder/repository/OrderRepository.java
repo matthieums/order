@@ -15,11 +15,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Repository
-public class OrderRepository {
+public class OrderRepository implements Clearable {
     public Map<String, Eurder> orders;
 
     public OrderRepository() {
         this.orders = new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public void clear() {
+        orders.clear();
     }
 
     public Eurder addOrder(Eurder order) {

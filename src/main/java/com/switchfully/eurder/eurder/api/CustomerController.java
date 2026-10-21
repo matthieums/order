@@ -26,6 +26,12 @@ public class CustomerController {
         return customerService.getAll();
     }
 
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDTO viewCustomer(@PathVariable String id) {
+        return customerService.get(id);
+    }
+
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO addCustomer(@Valid @RequestBody CreateCustomerDTO createCustomerDTO) {

@@ -9,6 +9,7 @@ import com.switchfully.eurder.eurder.service.ItemService;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +22,17 @@ class ItemControllerTest {
     @LocalServerPort
     private int port;
 
+    @Autowired
     private ItemService itemService;
+    @Autowired
     private ItemRepository itemRepository;
 
     @BeforeEach
     void setup() {
+        itemRepository.clear();
         itemRepository = new ItemRepository();
         itemService = new ItemService(itemRepository);
+
     }
 
     @Test

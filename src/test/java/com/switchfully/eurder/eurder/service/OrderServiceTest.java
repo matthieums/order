@@ -12,23 +12,28 @@ import com.switchfully.eurder.eurder.repository.OrderRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrderServiceTest {
+    @Autowired
     private OrderService orderService;
+    @Autowired
     private OrderRepository orderRepository;
+    @Autowired
     private ItemRepository itemRepository;
+
     private Customer customer;
 
     @BeforeEach
     void setup() {
-        orderRepository = new OrderRepository();
-        itemRepository = new ItemRepository();
-        orderService = new OrderService(orderRepository, itemRepository);
-
+        orderRepository.clear();
+        itemRepository.clear();
         customer = new Customer(
                 "newUser",
                 "user",
@@ -43,6 +48,7 @@ class OrderServiceTest {
         Item item1 = new Item("item1", "an item", 5.0, 20);
         Item item2 = new Item("item2", "an item", 5.0, 20);
 
+        itemRepository.addItems(List.of(item1, item2));
         CreateOrderDTO validCreateOrderDTO = new CreateOrderDTO(
                 Map.of(
                         item1.getId(), item1.getAmount(),
@@ -126,8 +132,7 @@ class OrderServiceTest {
         OrderDTO order = orderService.addOrder(
                 new CreateOrderDTO(
                         Map.of(
-                                unavailableItem.getId(), unavailableItem.getAmount(),
-                                unavailableItem.getId(), unavailableItem.getAmount()
+                                unavailableItem.getId(), 1
                         ),
                         customer.email())
         );

@@ -13,7 +13,10 @@ public class CustomerMapper {
 
         return new CustomerDTO(
                 customer.firstname(),
-                customer.lastname()
+                customer.lastname(),
+                customer.email(),
+                customer.address(),
+                customer.phoneNumber()
         );
     }
 

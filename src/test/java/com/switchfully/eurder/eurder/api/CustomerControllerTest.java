@@ -6,6 +6,7 @@ import com.switchfully.eurder.eurder.domain.Customer;
 import com.switchfully.eurder.eurder.repository.CustomerRepository;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,11 @@ class CustomerControllerTest {
 
     @Autowired
     CustomerRepository customerRepository;
+
+    @BeforeEach
+    void setup() {
+        customerRepository.clear();
+    }
 
     @Test
     void givenValidBody_whenPost_thenReturn201() {
@@ -82,5 +88,28 @@ class CustomerControllerTest {
                         });
 
         assertThat(customers).hasSize(2);
+    }
+
+    @Test
+    void givenADatabaseWithCustomers_whenGetCustomer_thenReturnCustomerDTO() {
+        customerRepository.addCustomer(
+                new Customer(
+                        "newUser",
+                        "user",
+                        "user1@dto.com",
+                        "userAddress - 5555",
+                        "04 555 555 555"
+                )
+        );
+        CustomerDTO customer =
+                given()
+                        .port(port)
+                        .when()
+                        .get("/customers/user1@dto.com")
+                        .then()
+                        .statusCode(200)
+                        .body("email", equalTo("user1@dto.com"))
+                        .extract()
+                        .as(CustomerDTO.class);
     }
 }

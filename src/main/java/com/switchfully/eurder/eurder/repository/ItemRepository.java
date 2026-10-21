@@ -12,11 +12,16 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class ItemRepository {
+public class ItemRepository implements Clearable{
     public Map<String, Item> availableItems;
 
     public ItemRepository() {
         this.availableItems = new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public void clear() {
+        availableItems.clear();
     }
 
     public Item addItem(Item item) {
