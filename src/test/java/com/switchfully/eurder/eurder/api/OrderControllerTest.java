@@ -72,6 +72,9 @@ public class OrderControllerTest {
         return given()
                 .port(port)
                 .when()
+                .auth()
+                .preemptive()
+                .basic(customer.getId(), customer.getPassword())
                 .get("/orders/" + customerId)
                 .then()
                 .statusCode(200)
@@ -89,7 +92,7 @@ public class OrderControllerTest {
                         item1.getId(), 1,
                         item2.getId(), 1
                 ),
-                customer.getEmail()
+                customer.getId()
         );
 
         OrderDTO result = postOrder(dto);
@@ -113,20 +116,20 @@ public class OrderControllerTest {
                         item1.getId(), item1.getAmount(),
                         item2.getId(), item2.getAmount()
                 ),
-                customer.getEmail()
+                customer.getId()
         );
         CreateOrderDTO dto2 = new CreateOrderDTO(
                 Map.of(
                         item3.getId(), item3.getAmount(),
                         item4.getId(), item4.getAmount()
                 ),
-                customer.getEmail()
+                customer.getId()
         );
 
         postOrder(dto1);
         postOrder(dto2);
 
-        ReportDTO report = viewOrders(customer.getEmail());
+        ReportDTO report = viewOrders(customer.getId());
 
         assertThat(report).isNotNull();
         assertThat(report.getOrderDTOS()).hasSize(2);
@@ -136,7 +139,7 @@ public class OrderControllerTest {
     void givenACustomerAndTheIdOfAnOrderHePlaced_whenReorder_ThenReturn201() {
         Item item = ItemFactory.itemWithInfiniteSupply();
         itemRepository.addItem(item);
-        Eurder eurder = OrderFactory.order(item, 1, customer.getEmail());
+        Eurder eurder = OrderFactory.order(item, 1, customer.getId());
         orderRepository.addOrder(eurder);
 
         given()
@@ -144,7 +147,7 @@ public class OrderControllerTest {
                 .port(port)
                 .auth()
                 .preemptive()
-                .basic(customer.getEmail(), customer.getPassword())
+                .basic(customer.getId(), customer.getPassword())
                 .when()
                 .post("/orders/" + eurder.getId() + "/reorder")
                 .then()
@@ -155,14 +158,14 @@ public class OrderControllerTest {
     void givenACustomerAndTheIdOfAnOrderThatDoesNotExist_whenReorder_ThenReturn404() {
         Item item = ItemFactory.itemWithInfiniteSupply();
         itemRepository.addItem(item);
-        Eurder eurder = OrderFactory.order(item, 1, customer.getEmail());
+        Eurder eurder = OrderFactory.order(item, 1, customer.getId());
 
         given()
                 .contentType(ContentType.JSON)
                 .port(port)
                 .auth()
                 .preemptive()
-                .basic(customer.getEmail(), customer.getPassword())
+                .basic(customer.getId(), customer.getPassword())
                 .when()
                 .post("/orders/" + eurder.getId() + "/reorder")
                 .then()
@@ -173,7 +176,7 @@ public class OrderControllerTest {
     void givenACustomerAndTheIdOfAnOrderOfAnotherCustomer_whenReorder_ThenReturn404() {
         Item item = ItemFactory.itemWithInfiniteSupply();
         itemRepository.addItem(item);
-        Eurder order = OrderFactory.order(item, 1, customer.getEmail());
+        Eurder order = OrderFactory.order(item, 1, customer.getId());
         orderRepository.addOrder(order);
         Customer other = UserFactory.customerWithValidDetails();
         userRepository.addCustomer(other);
@@ -183,7 +186,7 @@ public class OrderControllerTest {
                 .port(port)
                 .auth()
                 .preemptive()
-                .basic(other.getEmail(), other.getPassword())
+                .basic(other.getId(), other.getPassword())
                 .when()
                 .post("/orders/" + order.getId() + "/reorder")
                 .then()

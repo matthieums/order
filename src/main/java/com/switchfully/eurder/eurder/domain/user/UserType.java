@@ -4,7 +4,7 @@ import java.util.List;
 
 public enum UserType {
     ADMIN(List.of(Feature.ADD_ITEM, Feature.UPDATE_ITEM)),
-    CUSTOMER(List.of(Feature.REORDER));
+    CUSTOMER(List.of(Feature.REORDER, Feature.VIEW_REPORT));
 
     private final List<Feature> features;
 

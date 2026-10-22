@@ -31,7 +31,8 @@ public class OrderController {
 
         @GetMapping(value = "/{id}",  produces = APPLICATION_JSON)
         @ResponseStatus(HttpStatus.OK)
-        public ReportDTO viewReport(@PathVariable String id) {
+        public ReportDTO viewReport(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable String id) {
+                securityService.validateAuthorization(authorization, Feature.VIEW_REPORT);
                 return orderService.getReportForCustomerWithId(id);
         }
 
