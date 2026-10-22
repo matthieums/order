@@ -92,33 +92,37 @@ class CustomerControllerTest {
                 UserFactory.customerWithValidDetails()
         );
 
-                given()
-                        .port(port)
-                        .when()
-                        .auth()
-                        .preemptive()
-                        .basic(customer.getId(), customer.getPassword())
-                        .get("/customers")
-                        .then()
-                        .statusCode(403);
+        given()
+                .port(port)
+                .when()
+                .auth()
+                .preemptive()
+                .basic(customer.getId(), customer.getPassword())
+                .get("/customers")
+                .then()
+                .statusCode(403);
 
     }
 
     @Test
-    void givenADatabaseWithCustomers_whenGetCustomer_thenReturnCustomerDTO() {
+    void givenADatabaseWithCustomers_whenAdminCallsGetCustomer_thenReturn200() {
         Customer customer = userRepository.addCustomer(
                 UserFactory.customerWithValidDetails()
         );
 
+        Admin admin = UserFactory.admin();
+        userRepository.addAdmin(admin);
+
         given()
                 .port(port)
                 .when()
+                .auth()
+                .preemptive()
+                .basic(admin.getId(), admin.getPassword())
                 .get("/customers/" + customer.getEmail())
                 .then()
                 .statusCode(200)
                 .body("email", equalTo(customer.getEmail())
                 );
     }
-
-
 }

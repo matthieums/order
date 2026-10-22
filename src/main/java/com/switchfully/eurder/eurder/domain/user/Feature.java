@@ -5,5 +5,6 @@ public enum Feature {
     UPDATE_ITEM,
     REORDER,
     VIEW_REPORT,
+    VIEW_CUSTOMER_DETAILS,
     VIEW_ALL_CUSTOMERS
 }

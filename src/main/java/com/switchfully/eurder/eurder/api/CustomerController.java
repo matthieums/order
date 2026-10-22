@@ -33,7 +33,8 @@ public class CustomerController {
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDTO viewCustomer(@PathVariable String id) {
+    public CustomerDTO viewCustomer(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable String id) {
+        securityService.validateAuthorization(authorization, Feature.VIEW_CUSTOMER_DETAILS);
         return customerService.get(id);
     }
 

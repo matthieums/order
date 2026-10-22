@@ -3,7 +3,7 @@ package com.switchfully.eurder.eurder.domain.user;
 import java.util.List;
 
 public enum UserType {
-    ADMIN(List.of(Feature.ADD_ITEM, Feature.UPDATE_ITEM, Feature.VIEW_ALL_CUSTOMERS)),
+    ADMIN(List.of(Feature.ADD_ITEM, Feature.UPDATE_ITEM, Feature.VIEW_ALL_CUSTOMERS, Feature.VIEW_CUSTOMER_DETAILS)),
     CUSTOMER(List.of(Feature.REORDER, Feature.VIEW_REPORT));
 
     private final List<Feature> features;
