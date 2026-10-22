@@ -3,7 +3,7 @@ package com.switchfully.eurder.eurder.api;
 import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.domain.user.Customer;
-import com.switchfully.eurder.eurder.factory.CreateCustomerDTOFactory;
+import com.switchfully.eurder.eurder.factory.DTOFactory;
 import com.switchfully.eurder.eurder.factory.UserFactory;
 import com.switchfully.eurder.eurder.repository.UserRepository;
 import io.restassured.common.mapper.TypeRef;
@@ -35,7 +35,7 @@ class CustomerControllerTest {
 
     @Test
     void givenValidBody_whenPost_thenReturn201() {
-        CreateCustomerDTO dto = CreateCustomerDTOFactory.validCreateCustomerDTO();
+        CreateCustomerDTO dto = DTOFactory.validCreateCustomerDTO();
 
         given()
                 .contentType(ContentType.JSON)

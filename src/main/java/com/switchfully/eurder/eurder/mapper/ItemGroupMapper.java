@@ -1,6 +1,7 @@
 package com.switchfully.eurder.eurder.mapper;
 
 import com.switchfully.eurder.eurder.api.dtos.ItemGroupDTO;
+import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.domain.ItemGroup;
 
 import java.util.List;
@@ -23,4 +24,14 @@ public class ItemGroupMapper {
                 .map(ItemGroupMapper::toDTO)
                 .toList();
     }
+    public static ItemGroup toItemGroup(Item item, int amount) {
+        return new ItemGroup(
+                item.getId(),
+                item.getName(),
+                amount,
+                item.getPrice()
+        );
+
+    }
+
 }

@@ -18,6 +18,12 @@ public class Eurder {
         this.placed_by = placed_by;
         this.totalPrice = calculatePrice();
     }
+    public Eurder(ItemGroup itemGroup, String placed_by) {
+        this.id = UUID.randomUUID().toString();
+        this.itemGroups = List.of(itemGroup);
+        this.placed_by = placed_by;
+        this.totalPrice = calculatePrice();
+    }
 
     public String getId() {
         return id;
@@ -40,4 +46,5 @@ public class Eurder {
                 .mapToDouble(group -> group.getAmount() * group.getUnitPrice())
                 .sum();
     }
+
 }

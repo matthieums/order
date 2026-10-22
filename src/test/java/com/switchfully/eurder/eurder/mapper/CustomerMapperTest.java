@@ -3,7 +3,7 @@ package com.switchfully.eurder.eurder.mapper;
 import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.domain.user.Customer;
-import com.switchfully.eurder.eurder.factory.CreateCustomerDTOFactory;
+import com.switchfully.eurder.eurder.factory.DTOFactory;
 import com.switchfully.eurder.eurder.factory.UserFactory;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +29,7 @@ class CustomerMapperTest {
 
     @Test
     void givenACreateCustomerDTO_whenToCustomer_thenReturnACustomerWithAppropriateValues() {
-        CreateCustomerDTO dto = CreateCustomerDTOFactory.validCreateCustomerDTO();
+        CreateCustomerDTO dto = DTOFactory.validCreateCustomerDTO();
 
         assertThat(CustomerMapper.toObject(dto))
                 .usingRecursiveComparison()

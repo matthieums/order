@@ -6,6 +6,9 @@ import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.domain.ItemGroup;
+import com.switchfully.eurder.eurder.exception.ForbiddenException;
+import com.switchfully.eurder.eurder.exception.OrderDoesNotExistException;
+import com.switchfully.eurder.eurder.mapper.ItemGroupMapper;
 import com.switchfully.eurder.eurder.mapper.OrderMapper;
 import com.switchfully.eurder.eurder.mapper.ReportMapper;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderService {
@@ -25,21 +29,20 @@ public class OrderService {
         this.itemRepository = itemRepository;
     }
 
-    public OrderDTO addOrder(CreateOrderDTO dto) {
-        List<ItemGroup> groups = dto.itemIdsToAmounts().entrySet().stream()
-                .map(group -> {
-                    Item item = itemRepository.getById(group.getKey());
-                    return new ItemGroup(
-                            item.getId(),
-                            item.getName(),
-                            group.getValue(),
-                            item.getPrice()
-                    );
+    private List<ItemGroup> toItemGroups(Map<String, Integer> itemIdsToAmounts) {
+//        Checks if item exists and creates the group if it exists
+//        You shouldn't be able to create an order of an item which does not exist in the repository
+        return itemIdsToAmounts.entrySet().stream()
+                .map(entry -> {
+                    Item item = itemRepository.getById(entry.getKey());
+                    return ItemGroupMapper.toItemGroup(item, entry.getValue());
                 })
                 .toList();
+    }
 
+    public OrderDTO addOrder(CreateOrderDTO dto) {
+        List<ItemGroup> groups = toItemGroups(dto.itemIdsToAmounts());
         Eurder order = new Eurder(groups, dto.placedBy());
-
         groups.forEach(group -> {
                     boolean immediatelyAvailable = setShippingDateBasedOnStock(group);
 
@@ -60,7 +63,6 @@ public class OrderService {
     }
 
     private boolean setShippingDateBasedOnStock(ItemGroup group) {
-        // Check if there's enough stock for this item group
         boolean available = itemRepository.getStock(group.getItemId())
                 .map(stock -> stock >= group.getAmount())
                 .orElse(false);
@@ -73,7 +75,20 @@ public class OrderService {
     }
 
     public ReportDTO getReportForCustomerWithId(String mail) {
-         List<Eurder> customerOrders = orderRepository.getOrdersOfCustomer(mail);
-         return ReportMapper.toDto(customerOrders);
+        List<Eurder> customerOrders = orderRepository.getOrdersOfCustomer(mail);
+        return ReportMapper.toDto(customerOrders);
+    }
+
+    public OrderDTO reorder(String userId, String orderId) {
+        Eurder order = orderRepository.getOrderById(orderId);
+
+        if (!order.getPlaced_by().equals(userId)) {
+            throw new OrderDoesNotExistException(orderId);
+        }
+
+        return OrderMapper.toDTO(orderRepository.addOrder(
+                        new Eurder(order.getItemGroups(), userId)
+                )
+        );
     }
 }

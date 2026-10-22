@@ -14,6 +14,8 @@ public class Customer extends User {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getId() { return getEmail(); }
+
     public String getAddress() {
         return address;
     }

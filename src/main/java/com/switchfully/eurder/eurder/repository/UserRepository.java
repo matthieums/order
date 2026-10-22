@@ -32,10 +32,10 @@ public class UserRepository extends AppRepository {
     }
 
     public Customer addCustomer(Customer customer) {
-        Customer existing = (Customer) users.putIfAbsent(customer.getEmail(), customer);
+        Customer existing = (Customer) users.putIfAbsent(customer.getId(), customer);
 
         if (existing != null) {
-            throw new CustomerAlreadyExistsException(customer.getEmail());
+            throw new CustomerAlreadyExistsException(customer.getId());
         }
 
         return customer;

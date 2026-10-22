@@ -19,7 +19,7 @@ public class SecurityService {
         this.userRepository = userRepository;
     }
 
-    public void validateAuthorization(String authorization, Feature feature) {
+    public String validateAuthorization(String authorization, Feature feature) {
         if(authorization == null || !authorization.startsWith("Basic")) {
             throw new UnauthorizedException();
         }
@@ -46,6 +46,8 @@ public class SecurityService {
         if(!user.allowedToPerform(feature)){
             throw new ForbiddenException();
         }
+
+        return user.getEmail();
     }
 
     private boolean passwordMatch(User user, String password) {
