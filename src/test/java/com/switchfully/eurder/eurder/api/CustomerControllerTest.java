@@ -2,6 +2,7 @@ package com.switchfully.eurder.eurder.api;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
+import com.switchfully.eurder.eurder.domain.user.Admin;
 import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.factory.DTOFactory;
 import com.switchfully.eurder.eurder.factory.UserFactory;
@@ -51,7 +52,10 @@ class CustomerControllerTest {
     }
 
     @Test
-    void givenADatabaseWithCustomers_whenGetAll_thenReturnAllCustomers() {
+    void givenADatabaseWithCustomers_whenAdminCallsGetAll_thenReturnAllCustomers() {
+        Admin admin = UserFactory.admin();
+        userRepository.addAdmin(admin);
+
         userRepository.addCustomer(
                 UserFactory.customerWithValidDetails()
         );
@@ -63,6 +67,9 @@ class CustomerControllerTest {
                 given()
                         .port(port)
                         .when()
+                        .auth()
+                        .preemptive()
+                        .basic(admin.getId(), admin.getPassword())
                         .get("/customers")
                         .then()
                         .statusCode(200)
@@ -71,6 +78,30 @@ class CustomerControllerTest {
                         });
 
         assertThat(customers).hasSize(2);
+    }
+
+    @Test
+    void givenADatabaseWithCustomers_whenUnauthorizedUserCallsGetAll_thenReturn403() {
+        Customer customer = UserFactory.customerWithValidDetails();
+        userRepository.addCustomer(customer);
+
+        userRepository.addCustomer(
+                UserFactory.customerWithValidDetails()
+        );
+        userRepository.addCustomer(
+                UserFactory.customerWithValidDetails()
+        );
+
+                given()
+                        .port(port)
+                        .when()
+                        .auth()
+                        .preemptive()
+                        .basic(customer.getId(), customer.getPassword())
+                        .get("/customers")
+                        .then()
+                        .statusCode(403);
+
     }
 
     @Test

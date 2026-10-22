@@ -21,6 +21,9 @@ public class User {
         this.password = password;
     }
 
+    public String getId() {
+        return email;
+    }
     public boolean allowedToPerform(Feature feature) {
         return userType.containsFeature(feature);
     }

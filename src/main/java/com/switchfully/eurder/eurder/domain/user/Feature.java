@@ -4,5 +4,6 @@ public enum Feature {
     ADD_ITEM,
     UPDATE_ITEM,
     REORDER,
-    VIEW_REPORT
+    VIEW_REPORT,
+    VIEW_ALL_CUSTOMERS
 }
