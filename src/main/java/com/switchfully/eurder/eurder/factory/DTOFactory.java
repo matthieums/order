@@ -31,6 +31,15 @@ public class DTOFactory {
         );
     }
 
+    public static CreateItemDTO createItemDTOForItem(Item item, int amount) {
+        return new CreateItemDTO(
+                item.getName(),
+                item.getDescription(),
+                item.getPrice(),
+                amount
+        );
+    }
+
     public static CreateOrderDTO validCreateOrderDTOWithOneItem(Customer customer, Item item) {
         return new CreateOrderDTO(
                 Map.of(
@@ -47,6 +56,27 @@ public class DTOFactory {
                                 Item::getId,
                                 Item::getAmount
                         )),
+                customer.getEmail()
+        );
+    }
+
+    public static CreateOrderDTO validCreateOrderDTOWithRandomItems(Customer customer) {
+        List<Item> items = ItemFactory.listOfItemsOfAmountOne(2);
+
+        return new CreateOrderDTO(
+                items.stream()
+                        .collect(Collectors.toMap(
+                                Item::getId,
+                                Item::getAmount
+                        )),
+                customer.getEmail()
+        );
+    }
+
+    public static CreateOrderDTO validCreateOrderDTOWithGivenItem(Customer customer, Item item, int amount) {
+
+        return new CreateOrderDTO(
+                Map.of(item.getId(), amount),
                 customer.getEmail()
         );
     }

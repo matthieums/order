@@ -2,6 +2,7 @@ package com.switchfully.eurder.eurder.api;
 
 import com.switchfully.eurder.eurder.api.dtos.*;
 import com.switchfully.eurder.eurder.domain.user.Feature;
+import com.switchfully.eurder.eurder.repository.OrderRepository;
 import com.switchfully.eurder.eurder.service.ItemService;
 import com.switchfully.eurder.eurder.service.OrderService;
 import com.switchfully.eurder.eurder.service.SecurityService;
@@ -43,4 +44,9 @@ public class OrderController {
                 return orderService.reorder(userId, orderId);
         }
 
+        @GetMapping("/shipping_today")
+        public List<OrderDTO> OrdersWithItemsShippingToday(@RequestHeader(value = "Authorization", required = false) String authorization) {
+                securityService.validateAuthorization(authorization, Feature.GET_ORDER_OF_ITEM_WITH_SHIPPING_DATE);
+                return orderService.getOrdersWithItemsShippingToday();
+        }
 }

@@ -1,5 +1,6 @@
 package com.switchfully.eurder.eurder.repository;
 
+import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.exception.OrderAlreadyExistsException;
@@ -8,6 +9,7 @@ import com.switchfully.eurder.eurder.mapper.OrderMapper;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,5 +53,15 @@ public class OrderRepository implements Clearable {
         return allOrders.values().stream()
                 .filter(order -> order.getPlaced_by().equals(customerMail))
                 .toList();
+    }
+
+    public List<Eurder> OrdersWithItemsShippingToday() {
+        List<Eurder> allOrders = getAll().values().stream().toList();
+        return allOrders.stream()
+                .filter(order ->
+                        order.hasShippingDateOf(LocalDate.now())
+                )
+                .toList();
+
     }
 }

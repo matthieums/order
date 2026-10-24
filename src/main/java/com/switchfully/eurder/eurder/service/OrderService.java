@@ -91,4 +91,10 @@ public class OrderService {
                 )
         );
     }
+
+    public List<OrderDTO> getOrdersWithItemsShippingToday() {
+        return orderRepository.OrdersWithItemsShippingToday().stream()
+                .map(OrderMapper::toDTO)
+                .toList();
+    }
 }

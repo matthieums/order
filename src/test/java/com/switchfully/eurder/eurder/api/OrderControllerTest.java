@@ -5,6 +5,8 @@ import com.switchfully.eurder.eurder.api.dtos.CreateOrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
+import com.switchfully.eurder.eurder.domain.ItemGroup;
+import com.switchfully.eurder.eurder.domain.user.Admin;
 import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.factory.DTOFactory;
@@ -23,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -41,12 +44,12 @@ public class OrderControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private OrderService orderService;
-
     private Customer customer;
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private OrderService orderService;
 
     @BeforeEach
     void setup() {
@@ -191,5 +194,40 @@ public class OrderControllerTest {
                 .post("/orders/" + order.getId() + "/reorder")
                 .then()
                 .statusCode(404);
+    }
+
+    private Item createItemAndSetShippingDateToToday(int quantity) {
+        Item item = ItemFactory.itemWithInfiniteSupply();
+        itemRepository.addItem(item);
+
+        CreateOrderDTO dto = DTOFactory.validCreateOrderDTOWithGivenItem(customer, item, quantity);
+        orderService.addOrder(dto);
+
+        List<Eurder> orders = orderRepository.getOrdersOfCustomer(customer.getId());
+        orders.stream()
+                .flatMap(order -> order.getItemGroups().stream())
+                .forEach(itemGroup -> itemGroup.setShippingDate(LocalDate.now()));
+
+        return item;
+    }
+
+    @Test
+    void givenOrdersWithItemsShippingToday_whenOrdersWithItemsShippingToday_thenReturn200() {
+        Item item = createItemAndSetShippingDateToToday(1);
+
+        Admin admin = UserFactory.admin();
+        userRepository.addAdmin(admin);
+
+        given()
+                .contentType(ContentType.JSON)
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic(admin.getId(), admin.getPassword())
+                .when()
+                .get("orders/shipping_today")
+                .then()
+                .statusCode(200)
+                .body("size()", equalTo(1));
     }
 }

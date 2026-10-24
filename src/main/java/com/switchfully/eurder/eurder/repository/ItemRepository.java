@@ -1,12 +1,16 @@
 package com.switchfully.eurder.eurder.repository;
 
+import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
 import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
+import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.exception.ItemAlreadyExistsException;
 import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
+import com.switchfully.eurder.eurder.mapper.OrderMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,10 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class ItemRepository extends AppRepository {
+    private final OrderRepository orderRepository;
     public Map<String, Item> availableItems;
 
-    public ItemRepository() {
+    public ItemRepository(OrderRepository orderRepository) {
         this.availableItems = new ConcurrentHashMap<>();
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -67,16 +73,16 @@ public class ItemRepository extends AppRepository {
     public void subtractFromStock(String itemId, int requiredAMount) {
         Item item = getById(itemId);
 
-       availableItems.put(
-               itemId,
-               new Item(
-                       itemId,
-                       item.getName(),
-                       item.getDescription(),
-                       item.getPrice(),
-                       item.getAmount() - requiredAMount
-                       )
-       );
+        availableItems.put(
+                itemId,
+                new Item(
+                        itemId,
+                        item.getName(),
+                        item.getDescription(),
+                        item.getPrice(),
+                        item.getAmount() - requiredAMount
+                )
+        );
     }
 
     public double getPrice(String itemId) {
@@ -86,4 +92,6 @@ public class ItemRepository extends AppRepository {
     public void remove(Item item) {
         availableItems.remove(item.getId());
     }
+
+
 }

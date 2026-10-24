@@ -2,12 +2,17 @@ package com.switchfully.eurder.eurder.api;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
+import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
 import com.switchfully.eurder.eurder.domain.user.Feature;
+import com.switchfully.eurder.eurder.repository.ItemRepository;
 import com.switchfully.eurder.eurder.service.ItemService;
 import com.switchfully.eurder.eurder.service.SecurityService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "items")
@@ -16,10 +21,12 @@ public class ItemController {
     private final SecurityService securityService;
 
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
 
-    public ItemController(ItemService itemService, SecurityService securityService) {
+    public ItemController(ItemService itemService, SecurityService securityService, ItemRepository itemRepository) {
         this.itemService = itemService;
         this.securityService = securityService;
+        this.itemRepository = itemRepository;
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)

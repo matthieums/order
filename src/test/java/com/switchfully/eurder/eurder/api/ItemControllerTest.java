@@ -37,8 +37,6 @@ class ItemControllerTest {
     void setup() {
         itemRepository.clear();
         userRepository.clear();
-        itemRepository = new ItemRepository();
-        itemService = new ItemService(itemRepository);
 
         admin = UserFactory.admin();
         userRepository.addAdmin(admin);

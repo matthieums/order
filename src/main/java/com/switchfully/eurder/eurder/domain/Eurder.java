@@ -1,6 +1,7 @@
 package com.switchfully.eurder.eurder.domain;
 
 import com.switchfully.eurder.eurder.repository.ItemRepository;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,5 +47,14 @@ public class Eurder {
                 .mapToDouble(group -> group.getAmount() * group.getUnitPrice())
                 .sum();
     }
+
+    public boolean hasShippingDateOf(LocalDate shippingDate) {
+        return getItemGroups().stream()
+                .anyMatch(itemGroup -> itemGroup.hasShippingDateOf(shippingDate));
+    }
+
+
+
+
 
 }

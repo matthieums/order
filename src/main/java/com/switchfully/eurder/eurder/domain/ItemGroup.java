@@ -49,5 +49,8 @@ public class ItemGroup {
         this.shippingDate = shippingDate;
     }
 
+    public boolean hasShippingDateOf(LocalDate date) {
+        return shippingDate.isEqual(date);
+    }
 
 }
