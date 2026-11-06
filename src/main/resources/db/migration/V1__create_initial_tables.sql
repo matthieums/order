@@ -1,0 +1,35 @@
+CREATE TABLE CUSTOMER (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(200) NOT NULL UNIQUE,
+    address VARCHAR(200) NOT NULL,
+    phone_number VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE ITEM (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(500),
+    price NUMERIC(10,2) NOT NULL CHECK (price >= 0),
+    amount INT NOT NULL CHECK (amount >= 0)
+);
+
+CREATE TABLE EURDER (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    customer_id BIGINT NOT NULL,
+    archived BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) REFERENCES CUSTOMER(id)
+);
+
+CREATE TABLE ITEM_GROUP (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
+    amount INT NOT NULL CHECK (amount > 0),
+    unit_price NUMERIC(10,2) NOT NULL CHECK (unit_price >= 0),
+    shipping_date TIMESTAMP NOT NULL,
+    CONSTRAINT fk_item_group_order FOREIGN KEY (order_id) REFERENCES EURDER(id),
+    CONSTRAINT fk_item_group_item_id FOREIGN KEY (item_id) REFERENCES ITEM(id)
+);
