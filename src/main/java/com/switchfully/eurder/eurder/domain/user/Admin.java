@@ -14,4 +14,9 @@ public class Admin extends User {
                  String email, String password) {
         super(firstname, lastname, email, password);
     }
+
+    @Override
+    public UserType getUserType() {
+        return UserType.ADMIN;
+    }
 }

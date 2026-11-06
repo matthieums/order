@@ -35,4 +35,9 @@ public class Customer extends User {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    @Override
+    public UserType getUserType() {
+        return UserType.CUSTOMER;
+    }
 }

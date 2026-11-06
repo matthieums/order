@@ -25,7 +25,7 @@ public class CustomerMapper {
                 .map(CustomerMapper::toDTO)
                 .toList();
     }
-
+    
     public static Customer toObject(CreateCustomerDTO dto) {
         return new Customer(
                 dto.getFirstname(),

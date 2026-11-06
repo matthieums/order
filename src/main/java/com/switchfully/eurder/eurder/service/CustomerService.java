@@ -4,44 +4,38 @@ import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.domain.user.User;
+import com.switchfully.eurder.eurder.exception.CustomerDoesNotExistException;
 import com.switchfully.eurder.eurder.mapper.CustomerMapper;
+import com.switchfully.eurder.eurder.repository.CustomerRepository;
 import com.switchfully.eurder.eurder.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class CustomerService {
-    private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
 
     public CustomerDTO addCustomer(CreateCustomerDTO dto) {
-        Customer customer = userRepository.addCustomer(CustomerMapper.toObject(dto));
+        Customer customer = customerRepository.save(CustomerMapper.toObject(dto));
         return CustomerMapper.toDTO(customer);
     }
 
     public List<CustomerDTO> getAll() {
-        List<User> users = userRepository.getAll();
-
-        List<Customer> customers =  users.stream()
-                .filter(User::isCustomer)
-                .map(user -> (Customer) user)
-                .toList();
-
+        List<Customer> customers = customerRepository.findAll();;
         return CustomerMapper.toDTO(customers);
     }
 
-    public CustomerDTO get(String customerId) {
-        User user = userRepository.get(customerId);
+    public CustomerDTO get(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerDoesNotExistException(id));
 
-        if (!user.isCustomer()) {
-            throw new RuntimeException("Cannot fetch the required ID from the database");
-        }
-
-        return CustomerMapper.toDTO((Customer) user);
-
+        return CustomerMapper.toDTO(customer);
     }
 }

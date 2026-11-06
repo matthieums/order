@@ -1,7 +1,7 @@
 package com.switchfully.eurder.eurder.exception;
 
 public class CustomerDoesNotExistException extends DoesNotExistException {
-    public CustomerDoesNotExistException(String id) {
+    public CustomerDoesNotExistException(Long id) {
         super("Customer with id " + id + " does not exist.");
     }
 }
