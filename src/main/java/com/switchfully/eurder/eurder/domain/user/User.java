@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "USERS")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "USER_TYPE")
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,8 +36,8 @@ public class User {
 
     }
 
-    public String getId() {
-        return email;
+    public Long getId() {
+        return id;
     }
 //
 //    public boolean allowedToPerform(Feature feature) {
@@ -67,4 +67,11 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    public boolean allowedToPerform(Feature feature) {
+        return this.getUserType().containsFeature(feature);
+    }
+
+    public abstract UserType getUserType();
+
 }

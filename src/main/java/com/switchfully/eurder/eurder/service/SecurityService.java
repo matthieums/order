@@ -4,6 +4,7 @@ import com.switchfully.eurder.eurder.domain.user.Feature;
 import com.switchfully.eurder.eurder.domain.user.User;
 import com.switchfully.eurder.eurder.exception.ForbiddenException;
 import com.switchfully.eurder.eurder.exception.UnauthorizedException;
+import com.switchfully.eurder.eurder.exception.UserNotFoundException;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import com.switchfully.eurder.eurder.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class SecurityService {
         String email = emailAndPassword[0];
         String password = emailAndPassword[1];
 
-        User user = userRepository.get(email);
+        User user = userRepository.findByEmail(email);
 
         if(!passwordMatch(user, password)){
             throw new UnauthorizedException();
@@ -51,6 +52,9 @@ public class SecurityService {
     }
 
     private boolean passwordMatch(User user, String password) {
-        return userRepository.get(user.getEmail()).getPassword().equals(password);
+        User foundUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException(user.getId()));
+
+        return foundUser.getPassword().equals(password);
     }
 }

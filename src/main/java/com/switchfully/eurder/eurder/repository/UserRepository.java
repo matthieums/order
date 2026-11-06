@@ -4,6 +4,7 @@ import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.user.Admin;
 import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.domain.user.User;
+import com.switchfully.eurder.eurder.domain.user.UserType;
 import com.switchfully.eurder.eurder.exception.CustomerAlreadyExistsException;
 import com.switchfully.eurder.eurder.exception.CustomerDoesNotExistException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    public User findByEmail(String mail);
 //    private final Map<String, User> users;
 //
 //    public UserRepository() {
