@@ -18,12 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class ItemRepository extends AppRepository {
-    private final OrderRepository orderRepository;
     public Map<String, Item> availableItems;
 
-    public ItemRepository(OrderRepository orderRepository) {
+    public ItemRepository() {
         this.availableItems = new ConcurrentHashMap<>();
-        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -54,10 +52,6 @@ public class ItemRepository extends AppRepository {
 
     public boolean contains(Item item) {
         return availableItems.containsValue(item);
-    }
-
-    public boolean containsById(String itemId) {
-        return availableItems.containsKey(itemId);
     }
 
     public Item getById(String id) {

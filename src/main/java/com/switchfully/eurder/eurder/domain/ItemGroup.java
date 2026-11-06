@@ -10,8 +10,8 @@ public class ItemGroup {
     private final String itemName;
     private final int amount;
     private LocalDate shippingDate;
-    private double totalPrice;
-    private double unitPrice;
+    private final double totalPrice;
+    private final double unitPrice;
 
     public ItemGroup(String itemId, String itemName, int amount, double unitPrice) {
         this.itemId = itemId;

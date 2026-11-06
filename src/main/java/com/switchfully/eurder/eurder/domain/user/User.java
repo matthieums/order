@@ -25,7 +25,7 @@ public class User {
         return email;
     }
     public boolean allowedToPerform(Feature feature) {
-        return userType.containsFeature(feature);
+        return getUserType().containsFeature(feature);
     }
 
     public UserType getUserType() {

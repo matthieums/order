@@ -35,7 +35,6 @@ public class OrderRepository implements Clearable {
         if (existing != null) {
             throw new OrderAlreadyExistsException(order.getId());
         }
-
         return order;
     }
 

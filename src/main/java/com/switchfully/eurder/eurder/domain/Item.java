@@ -24,7 +24,6 @@ public class Item {
         this.price = price;
         this.amount = amount;
     }
-
     public Item(String id, String name, String description, double price, int amount) {
         this.id = id;
         this.name = name;
@@ -32,7 +31,6 @@ public class Item {
         this.price = price;
         this.amount = amount;
     }
-
 
     public String getId() {
         return id;
@@ -52,24 +50,5 @@ public class Item {
 
     public int getAmount() {
         return amount;
-    }
-
-    public boolean hasQuantityAvailable(int quantity) {
-        return amount >= quantity;
-    }
-
-    public void setAmount(int amount) {
-        if (amount < 0 || getAmount() - amount < 0) {
-            throw new RuntimeException();
-        }
-        this.amount = amount;
-    }
-
-    public boolean isAvailableInStock() {
-        return amount > 0;
-    }
-
-    public void subtractFromStock(int quantity) {
-        setAmount(getAmount() - quantity);
     }
 }

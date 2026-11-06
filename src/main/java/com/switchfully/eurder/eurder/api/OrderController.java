@@ -21,7 +21,7 @@ public class OrderController {
 
         public OrderController(OrderService orderService, SecurityService securityService) {
             this.orderService = orderService;
-                this.securityService = securityService;
+            this.securityService = securityService;
         }
 
         @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)

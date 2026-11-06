@@ -11,7 +11,7 @@ public class Eurder {
     private final String id;
     private final List<ItemGroup> itemGroups;
     private final String placed_by;
-    private double totalPrice;
+    private final double totalPrice;
 
     public Eurder(List<ItemGroup> itemGroups, String placed_by) {
         this.id = UUID.randomUUID().toString();
@@ -52,9 +52,4 @@ public class Eurder {
         return getItemGroups().stream()
                 .anyMatch(itemGroup -> itemGroup.hasShippingDateOf(shippingDate));
     }
-
-
-
-
-
 }
