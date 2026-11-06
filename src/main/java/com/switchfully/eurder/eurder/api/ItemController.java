@@ -34,7 +34,7 @@ public class ItemController {
 
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ItemDTO updateItem(@RequestHeader(value = "Authorization", required = false) String authorization, @Valid @RequestBody CreateItemDTO createItemDTO, @PathVariable String id) {
+    public ItemDTO updateItem(@RequestHeader(value = "Authorization", required = false) String authorization, @Valid @RequestBody CreateItemDTO createItemDTO, @PathVariable Long id) {
         securityService.validateAuthorization(authorization, Feature.UPDATE_ITEM);
         return itemService.updateItem(id, createItemDTO);
     }

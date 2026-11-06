@@ -3,6 +3,7 @@ package com.switchfully.eurder.eurder.service;
 import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
 import com.switchfully.eurder.eurder.domain.Item;
+import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
 import com.switchfully.eurder.eurder.mapper.ItemMapper;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import org.springframework.stereotype.Component;
@@ -16,12 +17,21 @@ public class ItemService {
     }
 
     public ItemDTO addItem(CreateItemDTO dto) {
-        Item item = itemRepository.addItem(ItemMapper.toObject(dto));
+        Item item = itemRepository.save(ItemMapper.toObject(dto));
         return ItemMapper.toDTO(item);
     }
 
-    public ItemDTO updateItem(String itemId, CreateItemDTO dto) {
-        Item item = itemRepository.updateItem(itemId, ItemMapper.toObject(dto));
-        return ItemMapper.toDTO(item);
+    public ItemDTO updateItem(Long itemId, CreateItemDTO dto) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemDoesNotExistException(itemId));
+
+        item.setName(dto.getName());
+        item.setPrice(dto.getPrice());
+        item.setDescription(dto.getDescription());
+        item.setAmount(dto.getAmount());
+
+        Item updatedItem = itemRepository.save(item);
+
+        return ItemMapper.toDTO(updatedItem);
     }
 }
