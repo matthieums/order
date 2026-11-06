@@ -1,55 +1,56 @@
 package com.switchfully.eurder.eurder.domain;
 
+import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
+import jakarta.persistence.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "EURDER")
 public class Eurder {
-    private final String id;
-    private final List<ItemGroup> itemGroups;
-    private final String placed_by;
-    private final double totalPrice;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Eurder(List<ItemGroup> itemGroups, String placed_by) {
-        this.id = UUID.randomUUID().toString();
-        this.itemGroups = itemGroups;
-        this.placed_by = placed_by;
-        this.totalPrice = calculatePrice();
-    }
-    public Eurder(ItemGroup itemGroup, String placed_by) {
-        this.id = UUID.randomUUID().toString();
-        this.itemGroups = List.of(itemGroup);
-        this.placed_by = placed_by;
-        this.totalPrice = calculatePrice();
+    @ManyToOne
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
+
+    @Column(name = "ARCHIVED")
+    private boolean archived;
+
+    public Eurder(Customer customer) {
+        this.customer = customer;
     }
 
-    public String getId() {
+    public Eurder() {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public List<ItemGroup> getItemGroups() {
-        return itemGroups;
+    public boolean isArchived() {
+        return archived;
     }
 
-    public String getPlaced_by() {
-        return placed_by;
-    }
-
-    private double calculatePrice() {
-        return getItemGroups().stream()
-                .mapToDouble(group -> group.getAmount() * group.getUnitPrice())
-                .sum();
-    }
-
-    public boolean hasShippingDateOf(LocalDate shippingDate) {
-        return getItemGroups().stream()
-                .anyMatch(itemGroup -> itemGroup.hasShippingDateOf(shippingDate));
-    }
+    //    private double calculatePrice() {
+//        return getItemGroups().stream()
+//                .mapToDouble(group -> group.getAmount() * group.getUnitPrice())
+//                .sum();
+//    }
+//
+//    public boolean hasShippingDateOf(LocalDate shippingDate) {
+//        return getItemGroups().stream()
+//                .anyMatch(itemGroup -> itemGroup.hasShippingDateOf(shippingDate));
+//    }
 }

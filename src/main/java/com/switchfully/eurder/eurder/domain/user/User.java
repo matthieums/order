@@ -1,44 +1,56 @@
 package com.switchfully.eurder.eurder.domain.user;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+@Entity
+@Table(name = "USERS")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "USER_TYPE")
 public class User {
-    private final UserType userType;
-    @NotBlank
-    String firstname;
-    @NotBlank
-    String lastname;
-    @NotBlank
-    String email;
-    @NotBlank
-    String password;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public User(UserType userType, String firstname, String lastname, String email, String password) {
-        this.userType = userType;
+    @Column(name = "FIRST_NAME")
+    private String firstname;
+
+    @Column(name = "LAST_NAME")
+    private String lastname;
+
+    @Column(name = "EMAIL", unique = true)
+    private String email;
+
+    @Column(name = "PASSWORD")
+    private String password;
+
+    public User(String firstname, String lastname,
+                String email, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
     }
 
+    public User() {
+
+    }
+
     public String getId() {
         return email;
     }
-    public boolean allowedToPerform(Feature feature) {
-        return getUserType().containsFeature(feature);
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public boolean isCustomer() {
-        return userType.equals(UserType.CUSTOMER);
-    }
-
-    public boolean isAdmin() {
-        return userType.equals(UserType.ADMIN);
-    }
+//
+//    public boolean allowedToPerform(Feature feature) {
+//        return getUserType().containsFeature(feature);
+//    }
+//
+//    public boolean isCustomer() {
+//        return userType.equals(UserType.CUSTOMER);
+//    }
+//
+//    public boolean isAdmin() {
+//        return userType.equals(UserType.ADMIN);
+//    }
 
     public String getFirstname() {
         return firstname;

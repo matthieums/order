@@ -7,6 +7,7 @@ import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.exception.ItemAlreadyExistsException;
 import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
 import com.switchfully.eurder.eurder.mapper.OrderMapper;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
@@ -17,75 +18,75 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class ItemRepository extends AppRepository {
-    public Map<String, Item> availableItems;
-
-    public ItemRepository() {
-        this.availableItems = new ConcurrentHashMap<>();
-    }
-
-    @Override
-    public void clear() {
-        availableItems.clear();
-    }
-
-    public Item addItem(Item item) {
-        Item existing = availableItems.putIfAbsent(item.getId(), item);
-
-        if (existing != null) {
-            throw new ItemAlreadyExistsException(item.getId());
-        }
-
-        return item;
-    }
-
-    public List<Item> addItems(List<Item> items) {
-        return items.stream()
-                .map(this::addItem)
-                .toList();
-    }
-
-    public Item updateItem(String id, Item item) {
-        availableItems.put(id, item);
-        return item;
-    }
-
-    public boolean contains(Item item) {
-        return availableItems.containsValue(item);
-    }
-
-    public Item getById(String id) {
-        return Optional.ofNullable(availableItems.get(id))
-                .orElseThrow(() -> new ItemDoesNotExistException(id));
-    }
-
-    public Optional<Integer> getStock(String itemId) {
-        return Optional.ofNullable(availableItems.get(itemId))
-                .map(Item::getAmount);
-    }
-
-    public void subtractFromStock(String itemId, int requiredAMount) {
-        Item item = getById(itemId);
-
-        availableItems.put(
-                itemId,
-                new Item(
-                        itemId,
-                        item.getName(),
-                        item.getDescription(),
-                        item.getPrice(),
-                        item.getAmount() - requiredAMount
-                )
-        );
-    }
-
-    public double getPrice(String itemId) {
-        return availableItems.get(itemId).getPrice();
-    }
-
-    public void remove(Item item) {
-        availableItems.remove(item.getId());
-    }
+public class ItemRepository extends JpaRepository<Item, Long> {
+//    public Map<String, Item> availableItems;
+//
+//    public ItemRepository() {
+//        this.availableItems = new ConcurrentHashMap<>();
+//    }
+//
+//    @Override
+//    public void clear() {
+//        availableItems.clear();
+//    }
+//
+//    public Item addItem(Item item) {
+//        Item existing = availableItems.putIfAbsent(item.getId(), item);
+//
+//        if (existing != null) {
+//            throw new ItemAlreadyExistsException(item.getId());
+//        }
+//
+//        return item;
+//    }
+//
+//    public List<Item> addItems(List<Item> items) {
+//        return items.stream()
+//                .map(this::addItem)
+//                .toList();
+//    }
+//
+//    public Item updateItem(String id, Item item) {
+//        availableItems.put(id, item);
+//        return item;
+//    }
+//
+//    public boolean contains(Item item) {
+//        return availableItems.containsValue(item);
+//    }
+//
+//    public Item getById(String id) {
+//        return Optional.ofNullable(availableItems.get(id))
+//                .orElseThrow(() -> new ItemDoesNotExistException(id));
+//    }
+//
+//    public Optional<Integer> getStock(String itemId) {
+//        return Optional.ofNullable(availableItems.get(itemId))
+//                .map(Item::getAmount);
+//    }
+//
+//    public void subtractFromStock(String itemId, int requiredAMount) {
+//        Item item = getById(itemId);
+//
+//        availableItems.put(
+//                itemId,
+//                new Item(
+//                        itemId,
+//                        item.getName(),
+//                        item.getDescription(),
+//                        item.getPrice(),
+//                        item.getAmount() - requiredAMount
+//                )
+//        );
+//    }
+//
+//    public double getPrice(String itemId) {
+//        return availableItems.get(itemId).getPrice();
+//    }
+//
+//    public void remove(Item item) {
+//        availableItems.remove(item.getId());
+//    }
 
 
 }

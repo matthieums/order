@@ -1,38 +1,44 @@
 package com.switchfully.eurder.eurder.domain;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.util.UUID;
 
+@Entity
+@Table(name = "ITEM")
 public class Item {
-    String id;
-    @NotBlank
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @Column(name = "NAME")
     String name;
-    @NotBlank
+
+    @Column(name = "DESCRIPTION")
     String description;
-    @Positive
+
+    @Column(name = "PRICE")
     double price;
-    @PositiveOrZero
+
+    @Column(name = "AMOUNT")
     int amount;
 
     public Item(String name, String description, double price, int amount) {
-        this.id = UUID.randomUUID().toString();
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.amount = amount;
-    }
-    public Item(String id, String name, String description, double price, int amount) {
-        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.amount = amount;
     }
 
-    public String getId() {
+    public Item() {
+
+    }
+
+    public Long getId() {
         return id;
     }
 

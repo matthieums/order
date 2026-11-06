@@ -1,17 +1,29 @@
 package com.switchfully.eurder.eurder.domain.user;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+@Entity
+@DiscriminatorValue("CUSTOMER")
 public class Customer extends User {
-    @NotBlank
-    String address;
-    @NotBlank
-    String phoneNumber;
 
-    public Customer(String firstname, String lastname, String email, String password, String address, String phoneNumber) {
-        super(UserType.CUSTOMER, firstname, lastname, email, password);
+    @Column(name = "ADDRESS")
+    private String address;
+
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+
+    public Customer(String firstname, String lastname,
+                    String email, String password,
+                    String address, String phoneNumber) {
+
+        super(firstname, lastname, email, password);
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public Customer() {
+        super();
     }
 
     public String getId() { return getEmail(); }

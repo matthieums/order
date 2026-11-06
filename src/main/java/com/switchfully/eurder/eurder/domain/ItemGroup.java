@@ -1,56 +1,72 @@
 package com.switchfully.eurder.eurder.domain;
 
 import com.switchfully.eurder.eurder.repository.ItemRepository;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Entity
+@Table(name = "item_group")
 public class ItemGroup {
-    private final String itemId;
-    private final String itemName;
-    private final int amount;
-    private LocalDate shippingDate;
-    private final double totalPrice;
-    private final double unitPrice;
 
-    public ItemGroup(String itemId, String itemName, int amount, double unitPrice) {
-        this.itemId = itemId;
-        this.itemName = itemName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "ORDER_ID")
+    private Eurder eurder;
+
+    @ManyToOne
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
+
+    @Column(name = "AMOUNT")
+    private int amount;
+
+    @Column(name = "UNIT_PRICE")
+    private double unitPrice;
+
+    @Column(name = "SHIPPING_DATE")
+    private LocalDate shipping_date;
+
+    public ItemGroup(Item item, int amount, double unitPrice) {
+        this.item = item;
         this.amount = amount;
         this.unitPrice = unitPrice;
-        this.totalPrice = unitPrice * amount;
     }
 
-    public String getItemName() {
-        return itemName;
+    public ItemGroup() {
+
     }
 
-    public String getItemId() {
-        return itemId;
+    public Long getId() {
+        return id;
+    }
+
+    public Eurder getEurder() {
+        return eurder;
+    }
+
+    public Item getItem() {
+        return item;
     }
 
     public int getAmount() {
         return amount;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public LocalDate getShippingDate() {
-        return shippingDate;
-    }
-
     public double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setShippingDate(LocalDate shippingDate) {
-        this.shippingDate = shippingDate;
+    public LocalDate getShipping_date() {
+        return shipping_date;
     }
 
-    public boolean hasShippingDateOf(LocalDate date) {
-        return shippingDate.isEqual(date);
-    }
+//    public boolean hasShippingDateOf(LocalDate date) {
+//        return shippingDate.isEqual(date);
+//    }
 
 }
