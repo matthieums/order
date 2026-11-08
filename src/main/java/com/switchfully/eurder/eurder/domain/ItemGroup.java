@@ -1,10 +1,6 @@
 package com.switchfully.eurder.eurder.domain;
-
-import com.switchfully.eurder.eurder.repository.ItemRepository;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "item_group")
@@ -31,14 +27,14 @@ public class ItemGroup {
     @Column(name = "SHIPPING_DATE")
     private LocalDate shipping_date;
 
-    public ItemGroup(Item item, int amount, double unitPrice) {
+    public ItemGroup(Eurder order, Item item, int amount) {
+        this.eurder = order;
         this.item = item;
         this.amount = amount;
-        this.unitPrice = unitPrice;
+        this.unitPrice = item.getPrice();  // At instantiation, the item group gets the current price of the item
     }
 
     public ItemGroup() {
-
     }
 
     public Long getId() {
@@ -49,6 +45,10 @@ public class ItemGroup {
         return eurder;
     }
 
+    public void setEurder(Eurder eurder) {
+        this.eurder = eurder;
+    }
+
     public Item getItem() {
         return item;
     }
@@ -57,15 +57,31 @@ public class ItemGroup {
         return amount;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
+    public double calculatePrice() {
+        return amount * unitPrice;
+    }
+
+    public double getTotalPrice() {
+        return calculatePrice();
     }
 
     public LocalDate getShipping_date() {
         return shipping_date;
     }
 
-//    public boolean hasShippingDateOf(LocalDate date) {
+    public void setShipping_date(LocalDate shipping_date) {
+        this.shipping_date = shipping_date;
+    }
+
+    public ItemGroup duplicate(Eurder order) {
+        return new ItemGroup(
+                order,
+                this.getItem(),
+                this.getAmount()
+        );
+    }
+
+    //    public boolean hasShippingDateOf(LocalDate date) {
 //        return shippingDate.isEqual(date);
 //    }
 

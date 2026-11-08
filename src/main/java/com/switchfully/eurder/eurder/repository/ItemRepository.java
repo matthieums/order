@@ -1,21 +1,9 @@
 package com.switchfully.eurder.eurder.repository;
 
-import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
-import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
-import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
-import com.switchfully.eurder.eurder.exception.ItemAlreadyExistsException;
-import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
-import com.switchfully.eurder.eurder.mapper.OrderMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
@@ -60,25 +48,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 //                .orElseThrow(() -> new ItemDoesNotExistException(id));
 //    }
 //
-//    public Optional<Integer> getStock(String itemId) {
-//        return Optional.ofNullable(availableItems.get(itemId))
-//                .map(Item::getAmount);
-//    }
+
 //
-//    public void subtractFromStock(String itemId, int requiredAMount) {
-//        Item item = getById(itemId);
-//
-//        availableItems.put(
-//                itemId,
-//                new Item(
-//                        itemId,
-//                        item.getName(),
-//                        item.getDescription(),
-//                        item.getPrice(),
-//                        item.getAmount() - requiredAMount
-//                )
-//        );
-//    }
 //
 //    public double getPrice(String itemId) {
 //        return availableItems.get(itemId).getPrice();

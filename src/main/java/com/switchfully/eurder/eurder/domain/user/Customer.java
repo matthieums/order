@@ -26,8 +26,6 @@ public class Customer extends User {
         super();
     }
 
-    public String getId() { return getEmail(); }
-
     public String getAddress() {
         return address;
     }

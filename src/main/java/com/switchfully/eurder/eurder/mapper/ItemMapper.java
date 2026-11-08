@@ -26,4 +26,13 @@ public class ItemMapper{
                 dto.getAmount()
         );
     }
+
+    public static Item toObject(ItemDTO dto) {
+        return new Item(
+                dto.name(),
+                dto.description(),
+                dto.price(),
+                dto.amount()
+        );
+    }
 }

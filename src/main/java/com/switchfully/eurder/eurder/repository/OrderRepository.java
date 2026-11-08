@@ -1,23 +1,13 @@
 package com.switchfully.eurder.eurder.repository;
 
-import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
-import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
-import com.switchfully.eurder.eurder.exception.OrderAlreadyExistsException;
-import com.switchfully.eurder.eurder.exception.OrderDoesNotExistException;
-import com.switchfully.eurder.eurder.mapper.OrderMapper;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public interface OrderRepository extends JpaRepository<Eurder, Long> {
+    public List<Eurder> findAllByCustomerId(Long customerId);
+
 //    public Map<String, Eurder> orders;
 //
 //    public OrderRepository() {

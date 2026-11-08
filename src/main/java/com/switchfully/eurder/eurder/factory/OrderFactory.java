@@ -8,7 +8,7 @@ import com.switchfully.eurder.eurder.mapper.ItemGroupMapper;
 public class OrderFactory {
 
     public static Eurder order(Item item, int amount, String userId) {
-        ItemGroup itemgroup =  ItemGroupMapper.toItemGroup(item, amount);
+        ItemGroup itemgroup =  ItemGroupMapper.toDomain(item, amount);
         return new Eurder(itemgroup, userId);
     }
 }

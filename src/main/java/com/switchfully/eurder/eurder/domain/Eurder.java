@@ -39,6 +39,10 @@ public class Eurder {
         return customer;
     }
 
+    public Eurder duplicate() {
+        return new Eurder(this.customer);
+    }
+
     public boolean isArchived() {
         return archived;
     }

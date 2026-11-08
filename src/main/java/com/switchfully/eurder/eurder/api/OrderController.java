@@ -2,8 +2,6 @@ package com.switchfully.eurder.eurder.api;
 
 import com.switchfully.eurder.eurder.api.dtos.*;
 import com.switchfully.eurder.eurder.domain.user.Feature;
-import com.switchfully.eurder.eurder.repository.OrderRepository;
-import com.switchfully.eurder.eurder.service.ItemService;
 import com.switchfully.eurder.eurder.service.OrderService;
 import com.switchfully.eurder.eurder.service.SecurityService;
 import jakarta.validation.Valid;
@@ -26,26 +24,26 @@ public class OrderController {
 
         @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
         @ResponseStatus(HttpStatus.CREATED)
-        public OrderDTO addOrder(@Valid @RequestBody CreateOrderDTO dto) {
+        public OrderDetailsDTO addOrder(@Valid @RequestBody CreateOrderDTO dto) {
                 return orderService.addOrder(dto);
         }
 
         @GetMapping(value = "/{id}",  produces = APPLICATION_JSON)
         @ResponseStatus(HttpStatus.OK)
-        public ReportDTO viewReport(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable String id) {
+        public ReportDTO viewReport(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long id) {
                 securityService.validateAuthorization(authorization, Feature.VIEW_REPORT);
                 return orderService.getReportForCustomerWithId(id);
         }
 
         @PostMapping(value = "{orderId}/reorder", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
         @ResponseStatus(HttpStatus.CREATED)
-        public OrderDTO reorder(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable String orderId) {
-                String userId = securityService.validateAuthorization(authorization, Feature.REORDER);
+        public OrderDetailsDTO reorder(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long orderId) {
+                Long userId = securityService.validateAuthorization(authorization, Feature.REORDER);
                 return orderService.reorder(userId, orderId);
         }
 
         @GetMapping("/shipping_today")
-        public List<OrderDTO> OrdersWithItemsShippingToday(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        public List<ShippingDTO> OrdersWithItemsShippingToday(@RequestHeader(value = "Authorization", required = false) String authorization) {
                 securityService.validateAuthorization(authorization, Feature.GET_ORDER_OF_ITEM_WITH_SHIPPING_DATE);
                 return orderService.getOrdersWithItemsShippingToday();
         }

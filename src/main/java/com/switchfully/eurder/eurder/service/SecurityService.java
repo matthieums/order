@@ -20,7 +20,7 @@ public class SecurityService {
         this.userRepository = userRepository;
     }
 
-    public String validateAuthorization(String authorization, Feature feature) {
+    public Long validateAuthorization(String authorization, Feature feature) {
         if(authorization == null || !authorization.startsWith("Basic")) {
             throw new UnauthorizedException();
         }
@@ -48,7 +48,7 @@ public class SecurityService {
             throw new ForbiddenException();
         }
 
-        return user.getEmail();
+        return user.getId();
     }
 
     private boolean passwordMatch(User user, String password) {

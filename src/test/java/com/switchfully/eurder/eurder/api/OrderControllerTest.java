@@ -1,11 +1,9 @@
 package com.switchfully.eurder.eurder.api;
 
-import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.CreateOrderDTO;
-import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
+import com.switchfully.eurder.eurder.api.dtos.OrderDetailsDTO;
 import com.switchfully.eurder.eurder.api.dtos.ReportDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
-import com.switchfully.eurder.eurder.domain.ItemGroup;
 import com.switchfully.eurder.eurder.domain.user.Admin;
 import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.domain.Item;
@@ -13,7 +11,6 @@ import com.switchfully.eurder.eurder.factory.DTOFactory;
 import com.switchfully.eurder.eurder.factory.ItemFactory;
 import com.switchfully.eurder.eurder.factory.OrderFactory;
 import com.switchfully.eurder.eurder.factory.UserFactory;
-import com.switchfully.eurder.eurder.mapper.OrderMapper;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import com.switchfully.eurder.eurder.repository.OrderRepository;
 import com.switchfully.eurder.eurder.repository.UserRepository;
@@ -59,7 +56,7 @@ public class OrderControllerTest {
         userRepository.addCustomer(customer);
     }
 
-    private OrderDTO postOrder(CreateOrderDTO dto) {
+    private OrderDetailsDTO postOrder(CreateOrderDTO dto) {
         return given()
                 .contentType(ContentType.JSON)
                 .port(port)
@@ -68,7 +65,7 @@ public class OrderControllerTest {
                 .post("/orders")
                 .then()
                 .statusCode(201)
-                .extract().as(OrderDTO.class);
+                .extract().as(OrderDetailsDTO.class);
     }
 
     private ReportDTO viewOrders(String customerId) {
@@ -98,7 +95,7 @@ public class OrderControllerTest {
                 customer.getId()
         );
 
-        OrderDTO result = postOrder(dto);
+        OrderDetailsDTO result = postOrder(dto);
 
         assertThat(result).isNotNull();
         assertThat(result.items()).hasSize(2);

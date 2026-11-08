@@ -7,8 +7,11 @@ import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
 import com.switchfully.eurder.eurder.mapper.ItemMapper;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Service
+@Transactional
 public class ItemService {
     private final ItemRepository itemRepository;
 

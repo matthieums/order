@@ -71,6 +71,13 @@ public class Item {
     }
 
     public void setAmount(int amount) {
+        if (amount > getAmount()) {
+            throw new RuntimeException("Stock amount of an item cannot be set to negative");
+        }
         this.amount = amount;
+    }
+
+    public void subtractAmount(int amount) {
+        setAmount(getAmount() - amount);
     }
 }

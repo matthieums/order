@@ -6,10 +6,12 @@ import com.switchfully.eurder.eurder.domain.Eurder;
 import java.util.List;
 
 public class ReportMapper {
-    public static ReportDTO toDto(List<Eurder> orders) {
+    private OrderMapper orderMapper;
+
+    public ReportDTO toDto(List<Eurder> orders) {
         return new ReportDTO(
                 orders.stream()
-                        .map(OrderMapper::toDTO)
+                        .map(orderMapper::toDetailsDTO)
                         .toList(),
                 orders.stream().mapToDouble(Eurder::getTotalPrice)
                         .sum()

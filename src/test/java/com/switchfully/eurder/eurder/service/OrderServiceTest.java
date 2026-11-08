@@ -1,7 +1,7 @@
 package com.switchfully.eurder.eurder.service;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateOrderDTO;
-import com.switchfully.eurder.eurder.api.dtos.OrderDTO;
+import com.switchfully.eurder.eurder.api.dtos.OrderDetailsDTO;
 import com.switchfully.eurder.eurder.domain.user.Customer;
 import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
@@ -51,7 +51,7 @@ class OrderServiceTest {
                 customer.getEmail()
         );
 
-        OrderDTO order = orderService.addOrder(validCreateOrderDTO);
+        OrderDetailsDTO order = orderService.addOrder(validCreateOrderDTO);
 
         Assertions.assertThat(orderRepository.getOrderById(order.id())).isNotNull();
     }
@@ -66,8 +66,8 @@ class OrderServiceTest {
                 ),
                 customer.getEmail()
         );
-        OrderDTO orderDTO = orderService.addOrder(validCreateOrderDTO);
-        Eurder order = orderRepository.getOrderById(orderDTO.id());
+        OrderDetailsDTO orderDetailsDTO = orderService.addOrder(validCreateOrderDTO);
+        Eurder order = orderRepository.getOrderById(orderDetailsDTO.id());
 
         LocalDate expectedDate = LocalDate.now().plusDays(1);
 
@@ -78,7 +78,7 @@ class OrderServiceTest {
     void givenOrderOfItemWithoutStock_whenSetShippingDate_thenDateSetToDayPlus7() {
         Item item1 = new Item("item1", "an item", 5.0, 0);
         itemRepository.addItem(item1);
-        OrderDTO orderDTO = orderService.addOrder(new CreateOrderDTO(
+        OrderDetailsDTO orderDetailsDTO = orderService.addOrder(new CreateOrderDTO(
                         Map.of(
                                 item1.getId(), item1.getAmount()
                         ),
@@ -86,7 +86,7 @@ class OrderServiceTest {
                 )
         );
 
-        Eurder order = orderRepository.getOrderById(orderDTO.id());
+        Eurder order = orderRepository.getOrderById(orderDetailsDTO.id());
 
         LocalDate expectedDate = LocalDate.now().plusDays(7);
         Assertions.assertThat(order.getItemGroups().getFirst().getShippingDate().equals(expectedDate));
@@ -99,7 +99,7 @@ class OrderServiceTest {
         itemRepository.addItem(item1);
         itemRepository.addItem(item2);
 
-        OrderDTO order = orderService.addOrder(
+        OrderDetailsDTO order = orderService.addOrder(
                 new CreateOrderDTO(
                         Map.of(
                                 item1.getId(), item1.getAmount(),
@@ -123,7 +123,7 @@ class OrderServiceTest {
         Item unavailableItem = new Item("Unavailable item", "an item", 5.0, 0);
         itemRepository.addItem(unavailableItem);
 
-        OrderDTO order = orderService.addOrder(
+        OrderDetailsDTO order = orderService.addOrder(
                 new CreateOrderDTO(
                         Map.of(
                                 unavailableItem.getId(), 1
