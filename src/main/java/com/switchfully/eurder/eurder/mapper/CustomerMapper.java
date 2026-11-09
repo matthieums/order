@@ -24,7 +24,7 @@ public class CustomerMapper {
 
     public List<CustomerDTO> toDTO(List<Customer> customers) {
         return customers.stream()
-                .map(CustomerMapper::toDTO)
+                .map(this::toDTO)
                 .toList();
     }
     
