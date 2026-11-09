@@ -18,6 +18,7 @@ import com.switchfully.eurder.eurder.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -100,17 +101,17 @@ public class OrderService {
         List<ItemGroup> savedItemGroups =
                 itemGroupRepository.saveAll(itemGroups);
 
-        double totalPrice = calculateTotalOrderPrice(savedItemGroups);
+        BigDecimal totalPrice = calculateTotalOrderPrice(savedItemGroups);
 
     //        The three pieces of information that should be given by the DTO are combined here:
     //        -> The order info, the itemGroups, and the total price of the order
         return orderMapper.toDetailsDTO(savedOrder, savedItemGroups, totalPrice);
     }
 
-    private double calculateTotalOrderPrice(List<ItemGroup> itemGroups) {
+    private BigDecimal calculateTotalOrderPrice(List<ItemGroup> itemGroups) {
         return itemGroups.stream()
-                .mapToDouble(ItemGroup::calculatePrice)
-                .sum();
+                .map(ItemGroup::calculatePrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private void subtractFromStock(Long itemId, int requiredAmount) {
@@ -122,7 +123,7 @@ public class OrderService {
     private boolean setShippingDateBasedOnStock(ItemGroup group) {
         boolean available = group.getItem().getAmount() > 0;
 
-        group.setShipping_date(
+        group.setShippingDate(
                 LocalDate.now().plusDays((available ? 1 : 7))
         );
 
@@ -130,12 +131,25 @@ public class OrderService {
     }
 
     public ReportDTO getReportForCustomerWithId(Long id) {
-        return reportMapper.toDto(orderRepository.findAllByCustomerId(id));
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerDoesNotExistException(id));
+
+        List<Eurder> orders = orderRepository.findAllByCustomerId(id);
+
+        List<OrderReportDTO> orderReportsDTOs = orders.stream()
+                .map(order -> {
+                    List<ItemGroup> itemGroups =
+                            itemGroupRepository.findAllByEurder_Id(order.getId());
+                    return reportMapper.toOrderReportDTO(customer, order, itemGroups);
+                })
+                .toList();
+
+        return reportMapper.toDto(customer, orderReportsDTOs);
     }
 
     public List<ShippingDTO> getOrdersWithItemsShippingToday() {
         List<ItemGroup> itemGroupsShippingToday =
-                itemGroupRepository.findAllByShipping_dateEquals(LocalDate.now());
+                itemGroupRepository.findAllByShippingDate(LocalDate.now());
 
         Map<Long, List<ItemGroup>> groupsByOrderId = itemGroupsShippingToday.stream()
                 .collect(Collectors.groupingBy(

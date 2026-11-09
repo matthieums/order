@@ -1,5 +1,7 @@
 package com.switchfully.eurder.eurder.domain;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -22,10 +24,10 @@ public class ItemGroup {
     private int amount;
 
     @Column(name = "UNIT_PRICE")
-    private double unitPrice;
+    private BigDecimal unitPrice;
 
     @Column(name = "SHIPPING_DATE")
-    private LocalDate shipping_date;
+    private LocalDate shippingDate;
 
     public ItemGroup(Eurder order, Item item, int amount) {
         this.eurder = order;
@@ -57,20 +59,20 @@ public class ItemGroup {
         return amount;
     }
 
-    public double calculatePrice() {
-        return amount * unitPrice;
+    public BigDecimal calculatePrice() {
+        return unitPrice.multiply(BigDecimal.valueOf(amount));
     }
 
-    public double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return calculatePrice();
     }
 
-    public LocalDate getShipping_date() {
-        return shipping_date;
+    public LocalDate getShippingDate() {
+        return shippingDate;
     }
 
-    public void setShipping_date(LocalDate shipping_date) {
-        this.shipping_date = shipping_date;
+    public void setShippingDate(LocalDate shipping_date) {
+        this.shippingDate = shipping_date;
     }
 
     public ItemGroup duplicate(Eurder order) {

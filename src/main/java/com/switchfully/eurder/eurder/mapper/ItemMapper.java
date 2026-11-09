@@ -3,7 +3,9 @@ package com.switchfully.eurder.eurder.mapper;
 import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
 import com.switchfully.eurder.eurder.domain.Item;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ItemMapper{
 
     public static ItemDTO toDTO(Item item) {

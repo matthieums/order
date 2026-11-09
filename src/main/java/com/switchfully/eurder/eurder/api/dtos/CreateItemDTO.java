@@ -4,13 +4,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
+import java.math.BigDecimal;
+
 public class CreateItemDTO {
     @NotBlank
     private String name;
     @NotBlank
     private String description;
     @Positive
-    private double price;
+    private BigDecimal price;
     @PositiveOrZero
     private int amount;
 
@@ -22,7 +24,7 @@ public class CreateItemDTO {
         return description;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -30,7 +32,7 @@ public class CreateItemDTO {
         return amount;
     }
 
-    public CreateItemDTO(String name, String description, double price, int amount) {
+    public CreateItemDTO(String name, String description, BigDecimal price, int amount) {
         this.name = name;
         this.description = description;
         this.price = price;

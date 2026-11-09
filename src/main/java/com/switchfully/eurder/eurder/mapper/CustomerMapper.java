@@ -3,9 +3,11 @@ package com.switchfully.eurder.eurder.mapper;
 import com.switchfully.eurder.eurder.api.dtos.CreateCustomerDTO;
 import com.switchfully.eurder.eurder.api.dtos.CustomerDTO;
 import com.switchfully.eurder.eurder.domain.user.Customer;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class CustomerMapper {
 
     public static CustomerDTO toDTO(Customer customer) {

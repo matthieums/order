@@ -6,13 +6,16 @@ import com.switchfully.eurder.eurder.api.dtos.OrderDetailsDTO;
 import com.switchfully.eurder.eurder.api.dtos.ShippingDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.ItemGroup;
+import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+@Component
 public class OrderMapper {
     private ItemGroupMapper itemGroupMapper;
 
-    public OrderDetailsDTO toDetailsDTO(Eurder order, List<ItemGroup> itemGroups, double totalPrice) {
+    public OrderDetailsDTO toDetailsDTO(Eurder order, List<ItemGroup> itemGroups, BigDecimal totalPrice) {
         if (order == null) return null;
 
         return new OrderDetailsDTO(

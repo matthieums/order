@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -21,13 +22,13 @@ public class Item {
     @Column(name = "DESCRIPTION")
     String description;
 
-    @Column(name = "PRICE")
-    double price;
+    @Column(name = "PRICE", precision = 10, scale = 2)
+    private BigDecimal price;
 
     @Column(name = "AMOUNT")
     int amount;
 
-    public Item(String name, String description, double price, int amount) {
+    public Item(String name, String description, BigDecimal price, int amount) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -50,7 +51,7 @@ public class Item {
         return description;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -66,7 +67,7 @@ public class Item {
         this.description = description;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

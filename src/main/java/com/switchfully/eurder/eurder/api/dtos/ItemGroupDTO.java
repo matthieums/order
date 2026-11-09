@@ -1,3 +1,5 @@
 package com.switchfully.eurder.eurder.api.dtos;
 
-public record ItemGroupDTO(String itemName, int orderedAmount, double totalPrice) {}
+import java.math.BigDecimal;
+
+public record ItemGroupDTO(String itemName, int orderedAmount, BigDecimal totalPrice) {}

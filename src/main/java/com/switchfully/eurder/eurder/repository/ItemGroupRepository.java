@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ItemGroupRepository extends JpaRepository<ItemGroup, Long> {
     List<ItemGroup> findAllByEurder_Id(Long eurderId);
-    List<ItemGroup> findAllByShipping_dateEquals(LocalDate date);
+    List<ItemGroup> findAllByShippingDate(LocalDate date);
 
 }

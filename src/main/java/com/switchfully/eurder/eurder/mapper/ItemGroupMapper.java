@@ -5,15 +5,17 @@ import com.switchfully.eurder.eurder.api.dtos.ItemGroupDTO;
 import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.domain.ItemGroup;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ItemGroupMapper {
     public ItemGroupDTO toDTO(ItemGroup itemGroup) {
         if (itemGroup == null) return null;
 
         return new ItemGroupDTO(
-                itemGroup.getItemName(),
+                itemGroup.getItem().getName(),
                 itemGroup.getAmount(),
                 itemGroup.getTotalPrice()
         );
