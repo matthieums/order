@@ -80,7 +80,7 @@ public class OrderService {
         Eurder newOrder = order.duplicate();
 
         List<ItemGroup> newGroups = originalGroups.stream()
-                .map(group -> group.duplicate(newOrder))
+                .map(group -> group.duplicateWithUpdatedItemPrice(newOrder))
                 .toList();
 
         return saveOrder(newOrder, newGroups);
@@ -140,7 +140,7 @@ public class OrderService {
                 .map(order -> {
                     List<ItemGroup> itemGroups =
                             itemGroupRepository.findAllByEurder_Id(order.getId());
-                    return reportMapper.toOrderReportDTO(customer, order, itemGroups);
+                    return reportMapper.toOrderReportDTO(order.getId(), itemGroups);
                 })
                 .toList();
 

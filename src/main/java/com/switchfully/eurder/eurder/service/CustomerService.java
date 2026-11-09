@@ -17,25 +17,27 @@ import java.util.List;
 @Transactional
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
     public CustomerDTO addCustomer(CreateCustomerDTO dto) {
-        Customer customer = customerRepository.save(CustomerMapper.toObject(dto));
-        return CustomerMapper.toDTO(customer);
+        Customer customer = customerRepository.save(customerMapper.toObject(dto));
+        return customerMapper.toDTO(customer);
     }
 
     public List<CustomerDTO> getAll() {
         List<Customer> customers = customerRepository.findAll();;
-        return CustomerMapper.toDTO(customers);
+        return customerMapper.toDTO(customers);
     }
 
     public CustomerDTO get(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerDoesNotExistException(id));
 
-        return CustomerMapper.toDTO(customer);
+        return customerMapper.toDTO(customer);
     }
 }

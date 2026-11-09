@@ -14,27 +14,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
-    public ItemService(ItemRepository itemRepository) {
+    public ItemService(ItemRepository itemRepository, ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
+        this.itemMapper = itemMapper;
     }
 
     public ItemDTO addItem(CreateItemDTO dto) {
-        Item item = itemRepository.save(ItemMapper.toObject(dto));
-        return ItemMapper.toDTO(item);
+        Item item = itemRepository.save(itemMapper.toObject(dto));
+        return itemMapper.toDTO(item);
     }
 
     public ItemDTO updateItem(Long itemId, CreateItemDTO dto) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemDoesNotExistException(itemId));
 
-        item.setName(dto.getName());
-        item.setPrice(dto.getPrice());
-        item.setDescription(dto.getDescription());
-        item.setAmount(dto.getAmount());
+        item.setName(dto.name());
+        item.setPrice(dto.price());
+        item.setDescription(dto.description());
+        item.setAmount(dto.amount());
 
         Item updatedItem = itemRepository.save(item);
 
-        return ItemMapper.toDTO(updatedItem);
+        return itemMapper.toDTO(updatedItem);
     }
 }
