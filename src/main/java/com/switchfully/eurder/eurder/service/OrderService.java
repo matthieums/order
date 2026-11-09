@@ -92,7 +92,7 @@ public class OrderService {
             boolean immediatelyAvailable = setShippingDateBasedOnStock(group);
 
             if (immediatelyAvailable) {
-                subtractFromStock(group.getItem().getId(), group.getAmount());
+                subtractFromStock(group.getItem(), group.getAmount());
             }
         });
 
@@ -114,10 +114,8 @@ public class OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private void subtractFromStock(Long itemId, int requiredAmount) {
-        itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemDoesNotExistException(itemId))
-                .subtractAmount(requiredAmount);
+    private void subtractFromStock(Item item, int requiredAmount) {
+        item.subtractAmount(requiredAmount);
     }
 
     private boolean setShippingDateBasedOnStock(ItemGroup group) {
