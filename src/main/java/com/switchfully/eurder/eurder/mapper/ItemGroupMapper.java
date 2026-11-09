@@ -28,11 +28,12 @@ public class ItemGroupMapper {
                 .map(this::toDTO)
                 .toList();
     }
-    public ItemGroup toDomain(Eurder order, CreateItemGroupDTO itemGroup, Item item) {
+    public ItemGroup toDomain(Eurder order, CreateItemGroupDTO dto, Item item) {
+        if (dto == null) return null;
         return new ItemGroup(
                 order,
                 item,
-                itemGroup.amount()
+                dto.amount()
         );
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class CustomerMapper {
 
-    public static CustomerDTO toDTO(Customer customer) {
+    public CustomerDTO toDTO(Customer customer) {
         if (customer == null) return null;
 
         return new CustomerDTO(
@@ -22,20 +22,20 @@ public class CustomerMapper {
         );
     }
 
-    public static List<CustomerDTO> toDTO(List<Customer> customers) {
+    public List<CustomerDTO> toDTO(List<Customer> customers) {
         return customers.stream()
                 .map(CustomerMapper::toDTO)
                 .toList();
     }
     
-    public static Customer toObject(CreateCustomerDTO dto) {
+    public Customer toObject(CreateCustomerDTO dto) {
         return new Customer(
-                dto.getFirstname(),
-                dto.getLastname(),
-                dto.getEmail(),
-                dto.getPassword(),
-                dto.getAddress(),
-                dto.getPhoneNumber()
+                dto.firstname(),
+                dto.lastname(),
+                dto.email(),
+                dto.password(),
+                dto.address(),
+                dto.phoneNumber()
         );
     }
 }

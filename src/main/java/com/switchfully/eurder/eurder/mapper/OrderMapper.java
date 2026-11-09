@@ -13,7 +13,11 @@ import java.util.List;
 
 @Component
 public class OrderMapper {
-    private ItemGroupMapper itemGroupMapper;
+    private final ItemGroupMapper itemGroupMapper;
+
+    public OrderMapper(ItemGroupMapper itemGroupMapper) {
+        this.itemGroupMapper = itemGroupMapper;
+    }
 
     public OrderDetailsDTO toDetailsDTO(Eurder order, List<ItemGroup> itemGroups, BigDecimal totalPrice) {
         if (order == null) return null;
@@ -37,7 +41,18 @@ public class OrderMapper {
     }
 
     public ShippingDTO toShippingDTO(List<ItemGroup> itemGroups) {
-        return new ShippingDTO(itemGroupMapper.toDTO(itemGroups), itemGroups.getFirst().getEurder().getCustomer().getAddress());
+        if (itemGroups == null || itemGroups.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Cannot create shipping DTO without item groups"
+            );
+        }
+        return new ShippingDTO(
+                itemGroupMapper.toDTO(itemGroups),
+                itemGroups.getFirst()
+                        .getEurder()
+                        .getCustomer()
+                        .getAddress()
+        );
     }
 
 }
