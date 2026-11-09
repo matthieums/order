@@ -46,66 +46,49 @@ public class OrderService {
         this.itemGroupMapper = itemGroupMapper;
     }
 
-    public List<ItemGroup> createItemGroups(List<CreateItemGroupDTO> DTOs) {
+    public OrderDetailsDTO addOrder(CreateOrderDTO dto) {
+        Customer customer = customerRepository.findById(dto.customerId())
+                .orElseThrow(() -> new CustomerDoesNotExistException(dto.customerId()));
+
+        Eurder order = new Eurder(customer);
+
+        List<ItemGroup> itemGroups = createItemGroups(order, dto.itemGroups());
+
+        return saveOrder(order, itemGroups);
+    }
+
+    public List<ItemGroup> createItemGroups(Eurder order, List<CreateItemGroupDTO> DTOs) {
         return DTOs.stream()
                 .map(dto -> {
                     Item item = itemRepository.findById(dto.itemId())
-                            .orElseThrow(() -> new ItemDoesNotExistException(dto.itemId()));
-                    Eurder order = orderRepository.findById(dto.orderId())
-                            .orElseThrow(() -> new OrderDoesNotExistException(dto.orderId()));
+                            .orElseThrow(() ->
+                                    new ItemDoesNotExistException(dto.itemId()));
+
                     return itemGroupMapper.toDomain(order, dto, item);
                 })
                 .toList();
     }
 
-    public OrderDetailsDTO addOrder(CreateOrderDTO dto) {
-        Customer customer = customerRepository.findById(dto.customerId())
-                .orElseThrow(() -> new CustomerDoesNotExistException(dto.customerId()));
-
-        List<ItemGroup> itemGroups = createItemGroups(dto.itemGroups());
-        return saveOrder(new Eurder(customer), itemGroups);
-    }
-
-
-    public OrderDetailsDTO reorder(Long userId, Long orderId) {
-        Eurder order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderDoesNotExistException(orderId));
-
-        if (!Objects.equals(order.getCustomer().getId(), userId)) {
-            throw new OrderDoesNotExistException(orderId);
-        }
-
-        List<ItemGroup> originalGroups = itemGroupRepository.findAllByEurder_Id(orderId);
-
-        Eurder newOrder = order.duplicate();
-
-        List<ItemGroup> newGroups = originalGroups.stream()
-                .map(group -> group.duplicateWithUpdatedItemPrice(newOrder))
-                .toList();
-
-        return saveOrder(newOrder, newGroups);
-    }
-
     private OrderDetailsDTO saveOrder(Eurder order, List<ItemGroup> itemGroups) {
 
-        itemGroups.forEach(group -> {
-            boolean immediatelyAvailable = setShippingDateBasedOnStock(group);
-
-            if (immediatelyAvailable) {
-                subtractFromStock(group.getItem(), group.getAmount());
-            }
-        });
+        itemGroups.forEach(this::processItemGroupStock);
 
         Eurder savedOrder = orderRepository.save(order);
 
         List<ItemGroup> savedItemGroups =
-                itemGroupRepository.saveAll(itemGroups);
+        itemGroupRepository.saveAll(itemGroups);
 
         BigDecimal totalPrice = calculateTotalOrderPrice(savedItemGroups);
 
-    //        The three pieces of information that should be given by the DTO are combined here:
-    //        -> The order info, the itemGroups, and the total price of the order
         return orderMapper.toDetailsDTO(savedOrder, savedItemGroups, totalPrice);
+    }
+
+    private void processItemGroupStock(ItemGroup group) {
+        boolean immediatelyAvailable = setShippingDateBasedOnStock(group);
+
+        if (immediatelyAvailable) {
+            subtractFromStock(group.getItem(), group.getAmount());
+        }
     }
 
     private BigDecimal calculateTotalOrderPrice(List<ItemGroup> itemGroups) {
@@ -124,8 +107,26 @@ public class OrderService {
         group.setShippingDate(
                 LocalDate.now().plusDays((available ? 1 : 7))
         );
-
         return available;
+    }
+
+    public OrderDetailsDTO reorder(Long userId, Long orderId) {
+        Eurder order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderDoesNotExistException(orderId));
+
+        if (!Objects.equals(order.getCustomer().getId(), userId)) {
+            throw new OrderDoesNotExistException(orderId);
+        }
+
+        List<ItemGroup> originalGroups = itemGroupRepository.findAllByEurder_Id(orderId);
+
+        Eurder newOrder = order.duplicate();
+
+        List<ItemGroup> newGroups = originalGroups.stream()
+                .map(group -> group.duplicateWithUpdatedItemPrice(newOrder))
+                .toList();
+
+        return saveOrder(newOrder, newGroups);
     }
 
     public ReportDTO getReportForCustomerWithId(Long id) {
