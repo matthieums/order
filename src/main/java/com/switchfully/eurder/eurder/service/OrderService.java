@@ -121,7 +121,7 @@ public class OrderService {
     }
 
     private boolean setShippingDateBasedOnStock(ItemGroup group) {
-        boolean available = group.getItem().getAmount() > 0;
+        boolean available = group.getItem().getAmount() >= group.getAmount();
 
         group.setShippingDate(
                 LocalDate.now().plusDays((available ? 1 : 7))
