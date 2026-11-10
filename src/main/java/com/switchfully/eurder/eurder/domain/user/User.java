@@ -39,18 +39,6 @@ public abstract class User {
     public Long getId() {
         return id;
     }
-//
-//    public boolean allowedToPerform(Feature feature) {
-//        return getUserType().containsFeature(feature);
-//    }
-//
-//    public boolean isCustomer() {
-//        return userType.equals(UserType.CUSTOMER);
-//    }
-//
-//    public boolean isAdmin() {
-//        return userType.equals(UserType.ADMIN);
-//    }
 
     public String getFirstname() {
         return firstname;

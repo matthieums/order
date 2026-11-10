@@ -67,24 +67,15 @@ public class ItemGroup {
         return calculatePrice();
     }
 
-    public LocalDate getShippingDate() {
-        return shippingDate;
-    }
-
     public void setShippingDate(LocalDate shipping_date) {
         this.shippingDate = shipping_date;
     }
 
-    public ItemGroup duplicate(Eurder order) {
+    public ItemGroup duplicateWithUpdatedItemPrice(Eurder order) {
         return new ItemGroup(
                 order,
                 this.getItem(),
                 this.getAmount()
         );
     }
-
-    //    public boolean hasShippingDateOf(LocalDate date) {
-//        return shippingDate.isEqual(date);
-//    }
-
 }

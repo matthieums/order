@@ -23,6 +23,7 @@ public class CustomerMapper {
     }
 
     public List<CustomerDTO> toDTO(List<Customer> customers) {
+        if (customers == null) return null;
         return customers.stream()
                 .map(this::toDTO)
                 .toList();

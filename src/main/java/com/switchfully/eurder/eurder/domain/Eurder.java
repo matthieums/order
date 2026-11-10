@@ -42,19 +42,4 @@ public class Eurder {
     public Eurder duplicate() {
         return new Eurder(this.customer);
     }
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    //    private double calculatePrice() {
-//        return getItemGroups().stream()
-//                .mapToDouble(group -> group.getAmount() * group.getUnitPrice())
-//                .sum();
-//    }
-//
-//    public boolean hasShippingDateOf(LocalDate shippingDate) {
-//        return getItemGroups().stream()
-//                .anyMatch(itemGroup -> itemGroup.hasShippingDateOf(shippingDate));
-//    }
 }

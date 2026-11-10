@@ -39,7 +39,6 @@ public class ItemGroupMapper {
 
     public CreateItemGroupDTO toCreateItemGroupDTO(ItemGroup itemGroup) {
         return new CreateItemGroupDTO(
-                itemGroup.getEurder().getId(),
                 itemGroup.getItem().getId(),
                 itemGroup.getAmount()
         );

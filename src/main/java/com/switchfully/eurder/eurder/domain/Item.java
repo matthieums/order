@@ -81,6 +81,9 @@ public class Item {
     }
 
     public void subtractAmount(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot subtract a negative amount.");
+        }
         setAmount(getAmount() - amount);
     }
 }

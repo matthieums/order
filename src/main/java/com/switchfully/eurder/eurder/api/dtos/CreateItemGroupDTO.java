@@ -1,3 +1,7 @@
 package com.switchfully.eurder.eurder.api.dtos;
 
-public record CreateItemGroupDTO(Long orderId, Long itemId, int amount) {}
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+public record CreateItemGroupDTO(@NotNull Long itemId,
+                                 @Positive int amount) {}
