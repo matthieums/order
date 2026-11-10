@@ -34,4 +34,11 @@ public class GlobalExceptionHandler {
         logger.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception e) {
+        logger.error("Unexpected error occurred", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An unexpected error occurred. Please try again later.");
+    }
 }
