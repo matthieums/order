@@ -5,6 +5,8 @@ import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
 import com.switchfully.eurder.eurder.domain.user.Feature;
 import com.switchfully.eurder.eurder.service.ItemService;
 import com.switchfully.eurder.eurder.service.SecurityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,11 @@ public class ItemController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @Operation(summary = "Add a new item", description = "Creates a new item in the catalog")
+    @ApiResponse(responseCode = "201", description = "Item created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid item data")
+    @ApiResponse(responseCode = "401", description = "Unauthorized - invalid authorization header")
+    @ApiResponse(responseCode = "403", description = "Forbidden - insufficient permissions")
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDTO addItem(@RequestHeader(value = "Authorization", required = false) String authorization, @Valid @RequestBody CreateItemDTO createItemDTO) {
         securityService.validateAuthorization(authorization, Feature.ADD_ITEM);
@@ -33,6 +40,12 @@ public class ItemController {
     }
 
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @Operation(summary = "Update an item", description = "Updates an existing item by ID")
+    @ApiResponse(responseCode = "202", description = "Item updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid item data")
+    @ApiResponse(responseCode = "401", description = "Unauthorized - invalid authorization header")
+    @ApiResponse(responseCode = "403", description = "Forbidden - insufficient permissions")
+    @ApiResponse(responseCode = "404", description = "Item not found")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ItemDTO updateItem(@RequestHeader(value = "Authorization", required = false) String authorization, @Valid @RequestBody CreateItemDTO createItemDTO, @PathVariable Long id) {
         securityService.validateAuthorization(authorization, Feature.UPDATE_ITEM);
