@@ -35,7 +35,7 @@ public class OrderController {
                 return orderService.getReportForCustomerWithId(id);
         }
 
-        @PostMapping(value = "{orderId}/reorder", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+        @PostMapping(value = "{orderId}/reorder", produces = APPLICATION_JSON)
         @ResponseStatus(HttpStatus.CREATED)
         public OrderDetailsDTO reorder(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long orderId) {
                 Long userId = securityService.validateAuthorization(authorization, Feature.REORDER);

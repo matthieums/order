@@ -14,6 +14,7 @@ public class CustomerMapper {
         if (customer == null) return null;
 
         return new CustomerDTO(
+                customer.getId(),
                 customer.getFirstname(),
                 customer.getLastname(),
                 customer.getEmail(),

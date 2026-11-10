@@ -18,44 +18,5 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
     public User findByEmail(String mail);
-//    private final Map<String, User> users;
-//
-//    public UserRepository() {
-//        this.users = new ConcurrentHashMap<>();
-//    }
-//
-//    @Override
-//    public void clear() {
-//        users.clear();
-//    }
-//
-//    public Admin addAdmin(Admin admin) {
-//        users.put(admin.getEmail(), admin);
-//        return admin;
-//    }
-//
-//    public Customer addCustomer(Customer customer) {
-//        Customer existing = (Customer) users.putIfAbsent(customer.getId(), customer);
-//
-//        if (existing != null) {
-//            throw new CustomerAlreadyExistsException(customer.getId());
-//        }
-//
-//        return customer;
-//    }
-//
-//    public List<User> getAll() {
-//        return new ArrayList<>(users.values());
-//    }
-//
-//    public User get(String id) {
-//        return Optional.ofNullable(users.get(id))
-//                .orElseThrow(() -> new CustomerDoesNotExistException(id));
-//    }
-//
-//    public boolean contains(Customer customer) {
-//        return users.containsValue(customer);
-//    }
 }

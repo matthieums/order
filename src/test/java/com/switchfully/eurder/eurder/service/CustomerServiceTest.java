@@ -45,6 +45,7 @@ class CustomerServiceTest {
                 customer.getPassword()
         );
         CustomerDTO expectedDTO = new CustomerDTO(
+                customer.getId(),
                 customer.getFirstname(),
                 customer.getLastname(),
                 customer.getEmail(),
@@ -74,6 +75,7 @@ class CustomerServiceTest {
         Long customerId = 1L;
         Customer customer = UserFactory.customerWithValidDetails();
         CustomerDTO expectedDTO = new CustomerDTO(
+                customerId,
                 customer.getFirstname(),
                 customer.getLastname(),
                 customer.getEmail(),

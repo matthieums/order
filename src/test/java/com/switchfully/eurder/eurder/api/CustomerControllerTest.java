@@ -53,6 +53,7 @@ class CustomerControllerTest {
     void viewCustomers_shouldReturn200_whenCustomersAreRequested() {
         Customer customer = UserFactory.customerWithValidDetails();
         CustomerDTO customerDTO = new CustomerDTO(
+                customer.getId(),
                 customer.getFirstname(),
                 customer.getLastname(),
                 customer.getEmail(),
@@ -88,6 +89,7 @@ class CustomerControllerTest {
         Long customerId = 1L;
         Customer customer = UserFactory.customerWithValidDetails();
         CustomerDTO response = new CustomerDTO(
+                customerId,
                 customer.getFirstname(),
                 customer.getLastname(),
                 customer.getEmail(),
@@ -117,6 +119,7 @@ class CustomerControllerTest {
     void addCustomer_shouldReturn201_whenCustomerIsCreated() {
         Customer customer = UserFactory.customerWithValidDetails();
         CustomerDTO response = new CustomerDTO(
+                customer.getId(),
                 customer.getFirstname(),
                 customer.getLastname(),
                 customer.getEmail(),
@@ -147,4 +150,7 @@ class CustomerControllerTest {
 
         verify(customerService).addCustomer(request);
     }
+
+
+
 }

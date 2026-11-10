@@ -59,6 +59,10 @@ public class ItemGroup {
         return amount;
     }
 
+    public LocalDate getShippingDate() {
+        return shippingDate;
+    }
+
     public BigDecimal calculatePrice() {
         return unitPrice.multiply(BigDecimal.valueOf(amount));
     }
