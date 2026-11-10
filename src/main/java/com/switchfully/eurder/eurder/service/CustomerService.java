@@ -40,4 +40,10 @@ public class CustomerService {
 
         return customerMapper.toDTO(customer);
     }
+
+    public Customer findById(Long id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerDoesNotExistException(id));
+
+    }
 }

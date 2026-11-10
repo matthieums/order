@@ -39,4 +39,10 @@ public class ItemService {
 
         return itemMapper.toDTO(updatedItem);
     }
+
+    public Item findById(Long id) {
+        return itemRepository.findById(id)
+                .orElseThrow(() ->
+                        new ItemDoesNotExistException(id));
+    }
 }
