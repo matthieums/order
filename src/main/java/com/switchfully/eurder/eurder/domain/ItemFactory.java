@@ -31,16 +31,4 @@ public class ItemFactory {
                 amount
         );
     }
-//
-//    public static List<Item> listOfItemsWithInfSupply(int count) {
-//        return IntStream.range(0, count)
-//                .mapToObj(i -> itemWithInfiniteSupply())
-//                .toList();
-//    }
-//
-//    public static List<Item> listOfItemsOfAmountOne(int count) {
-//        return IntStream.range(0, count)
-//                .mapToObj(i -> itemWithAmount(1))
-//                .toList();
-//    }
 }
