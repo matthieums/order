@@ -28,20 +28,17 @@ public class OrderService {
     private final ItemGroupService itemGroupService;
 
     private final OrderMapper orderMapper;
-    private final ReportMapper reportMapper;
 
     public OrderService(
             OrderRepository orderRepository,
             CustomerService customerService,
             OrderMapper orderMapper,
-            ReportMapper reportMapper,
             StockService stockService,
             ItemGroupService itemGroupService
     ) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
         this.orderMapper = orderMapper;
-        this.reportMapper = reportMapper;
         this.stockService = stockService;
         this.itemGroupService = itemGroupService;
     }
@@ -76,38 +73,12 @@ public class OrderService {
         return saveOrder(newOrder, newGroups);
     }
 
-    public ReportDTO getReportForCustomerWithId(Long id) {
-        Customer customer = customerService.findById(id);
-
-        List<Eurder> orders = orderRepository.findAllByCustomerId(id);
-
-        List<OrderReportDTO> orderReportsDTOs = orders.stream()
-                .map(order -> {
-                    List<ItemGroup> itemGroups =
-                            itemGroupService.findAllByEurder_Id(order.getId());
-                    return reportMapper.toOrderReportDTO(order.getId(), itemGroups);
-                })
-                .toList();
-
-        return reportMapper.toDto(customer, orderReportsDTOs);
-    }
-
-    public List<ShippingDTO> getOrdersWithItemsShippingToday() {
-        List<ItemGroup> itemGroupsShippingToday =
-                itemGroupService.findAllByShippingDate(LocalDate.now());
-
-        Map<Long, List<ItemGroup>> groupsByOrderId = itemGroupsShippingToday.stream()
-                .collect(Collectors.groupingBy(
-                        group -> group.getEurder().getId()
-                ));
-
-        return groupsByOrderId.values().stream()
-                .map(orderMapper::toShippingDTO)
-                .toList();
-    }
-
     private Eurder findById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrderDoesNotExistException(id));
+    }
+
+    public List<Eurder> findAllByCustomerId(Long id) {
+        return orderRepository.findAllByCustomerId(id);
     }
 }

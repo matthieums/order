@@ -54,7 +54,6 @@ class OrderServiceTest {
                 orderRepository,
                 customerService,
                 orderMapper,
-                reportMapper,
                 stockService,
                 itemGroupService
         );

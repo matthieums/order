@@ -3,6 +3,7 @@ package com.switchfully.eurder.eurder.api;
 import com.switchfully.eurder.eurder.api.dtos.*;
 import com.switchfully.eurder.eurder.domain.user.Feature;
 import com.switchfully.eurder.eurder.service.OrderService;
+import com.switchfully.eurder.eurder.service.ReportService;
 import com.switchfully.eurder.eurder.service.SecurityService;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -39,6 +40,9 @@ class OrderControllerTest {
 
     @MockitoBean
     private SecurityService securityService;
+
+    @MockitoBean
+    private ReportService reportService;
 
     @BeforeEach
     void setUp() {
@@ -104,7 +108,7 @@ class OrderControllerTest {
                 )
         );
 
-        when(orderService.getReportForCustomerWithId(customerId))
+        when(reportService.getReportForCustomerWithId(customerId))
                 .thenReturn(response);
 
         given()
@@ -124,7 +128,7 @@ class OrderControllerTest {
                 authorization, Feature.VIEW_REPORT
         );
 
-        verify(orderService).getReportForCustomerWithId(customerId);
+        verify(reportService).getReportForCustomerWithId(customerId);
     }
 
     @Test
@@ -169,7 +173,7 @@ class OrderControllerTest {
     void getOrdersShippingToday_shouldReturn200_whenNoOrdersExist() {
         String authorization = "Bearer test-token";
 
-        when(orderService.getOrdersWithItemsShippingToday())
+        when(reportService.getOrdersWithItemsShippingToday())
                 .thenReturn(List.of());
 
         given()
@@ -186,7 +190,7 @@ class OrderControllerTest {
                 Feature.GET_ORDER_OF_ITEM_WITH_SHIPPING_DATE
         );
 
-        verify(orderService).getOrdersWithItemsShippingToday();
+        verify(reportService).getOrdersWithItemsShippingToday();
     }
 
     @Test
@@ -194,7 +198,7 @@ class OrderControllerTest {
         String authorization = "Bearer test-token";
         String shippingAddress = "Rue du pont, 78 4020 Liège";
 
-        when(orderService.getOrdersWithItemsShippingToday())
+        when(reportService.getOrdersWithItemsShippingToday())
                 .thenReturn(List.of(
                         new ShippingDTO(
                                 List.of(
@@ -227,6 +231,6 @@ class OrderControllerTest {
                 Feature.GET_ORDER_OF_ITEM_WITH_SHIPPING_DATE
         );
 
-        verify(orderService).getOrdersWithItemsShippingToday();
+        verify(reportService).getOrdersWithItemsShippingToday();
     }
 }
