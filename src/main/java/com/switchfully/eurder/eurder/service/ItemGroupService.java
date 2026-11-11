@@ -38,6 +38,10 @@ public class ItemGroupService {
         return itemGroupRepository.findAllByShippingDate(date);
     }
 
+    public List<ItemGroup> findAllByEurder_IdIn(List<Long> orderIds) {
+        return itemGroupRepository.findAllByEurder_IdIn(orderIds);
+    }
+
     public BigDecimal calculateTotalPriceOfGroups(List<ItemGroup> itemGroups) {
         return itemGroups.stream()
                 .map(ItemGroup::calculatePrice)

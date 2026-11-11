@@ -42,15 +42,24 @@ public class ReportService {
         Customer customer = customerService.findById(id);
         List<Eurder> orders = orderService.findAllByCustomerId(id);
 
-        List<OrderReportDTO> orderReportsDTOs = orders.stream()
-                .map(order -> {
-                    List<ItemGroup> itemGroups =
-                            itemGroupService.findAllByEurder_Id(order.getId());
-                    return reportMapper.toOrderReportDTO(order.getId(), itemGroups);
-                })
+        List<Long> orderIds = orders.stream()
+                .map(Eurder::getId)
                 .toList();
 
-        return reportMapper.toDto(customer, orderReportsDTOs);
+        Map<Long, List<ItemGroup>> groupsByOrderId =
+                itemGroupService.findAllByEurder_IdIn(orderIds).stream()
+                        .collect(Collectors.groupingBy(
+                                group -> group.getEurder().getId()
+                        ));
+
+        List<OrderReportDTO> orderReportDtos = orders.stream()
+                .map(order -> reportMapper.toOrderReportDTO(
+                        order.getId(),
+                        groupsByOrderId.get(order.getId()
+                )))
+                .toList();
+
+        return reportMapper.toDto(customer, orderReportDtos);
     }
 
     public List<ShippingDTO> getOrdersWithItemsShippingToday() {

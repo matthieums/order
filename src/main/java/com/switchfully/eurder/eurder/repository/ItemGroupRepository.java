@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface ItemGroupRepository extends JpaRepository<ItemGroup, Long> {
     List<ItemGroup> findAllByEurder_Id(Long eurderId);
+    List<ItemGroup> findAllByEurder_IdIn(List<Long> orderIds);
     List<ItemGroup> findAllByShippingDate(LocalDate date);
 }
