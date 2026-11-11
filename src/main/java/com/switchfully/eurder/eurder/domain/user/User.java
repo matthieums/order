@@ -56,6 +56,10 @@ public abstract class User {
         return password;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public boolean allowedToPerform(Feature feature) {
         return this.getUserType().containsFeature(feature);
     }

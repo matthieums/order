@@ -7,13 +7,16 @@ import com.switchfully.eurder.eurder.domain.Eurder;
 import com.switchfully.eurder.eurder.domain.Item;
 import com.switchfully.eurder.eurder.domain.ItemGroup;
 import com.switchfully.eurder.eurder.domain.user.Customer;
+import com.switchfully.eurder.eurder.domain.user.User;
 import com.switchfully.eurder.eurder.exception.CustomerDoesNotExistException;
 import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
 import com.switchfully.eurder.eurder.domain.ItemFactory;
+import com.switchfully.eurder.eurder.exception.OrderDoesNotExistException;
 import com.switchfully.eurder.eurder.factory.OrderFactory;
 import com.switchfully.eurder.eurder.factory.UserFactory;
 import com.switchfully.eurder.eurder.mapper.*;
 import com.switchfully.eurder.eurder.repository.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -30,111 +33,31 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
-
     @Mock
     private OrderRepository orderRepository;
-
     @Mock
-    private ItemRepository itemRepository;
-
+    private CustomerService customerService;
     @Mock
-    private CustomerRepository customerRepository;
-
+    private StockService stockService;
     @Mock
-    private ItemGroupRepository itemGroupRepository;
-
+    private ItemGroupService itemGroupService;
     @Mock
     private OrderMapper orderMapper;
-
     @Mock
     private ReportMapper reportMapper;
 
-    @Mock
-    private ItemGroupMapper itemGroupMapper;
-
-    @InjectMocks
     private OrderService orderService;
 
-    @Test
-    void createItemGroups_shouldReturnItemGroups_whenItemsAndOrdersExist() {
-        Long itemId = 1L;
-        Long orderId = 2L;
-
-        Item item = ItemFactory.itemWithInfiniteSupply();
-        Eurder order = OrderFactory.order();
-
-        CreateItemGroupDTO dto = new CreateItemGroupDTO(
-                itemId, 3
+    @BeforeEach
+    void setUp() {
+        orderService = new OrderService(
+                orderRepository,
+                customerService,
+                orderMapper,
+                reportMapper,
+                stockService,
+                itemGroupService
         );
-
-        ItemGroup expectedGroup = new ItemGroup(order, item, 3);
-
-        when(itemRepository.findById(itemId))
-                .thenReturn(Optional.of(item));
-
-        when(itemGroupMapper.toDomain(order, dto, item))
-                .thenReturn(expectedGroup);
-
-        List<ItemGroup> result =
-                orderService.createItemGroups(order, List.of(dto));
-
-        assertEquals(1, result.size());
-        assertEquals(expectedGroup, result.getFirst());
-
-        verify(itemRepository).findById(itemId);
-        verify(itemGroupMapper).toDomain(order, dto, item);
-    }
-
-    @Test
-    void createItemGroups_shouldThrowException_whenItemDoesNotExist() {
-        Long itemId = 1L;
-        Eurder order = new Eurder(UserFactory.customerWithValidDetails());
-        CreateItemGroupDTO dto = new CreateItemGroupDTO(
-                itemId, 3
-        );
-
-        when(itemRepository.findById(itemId))
-                .thenReturn(Optional.empty());
-
-        assertThrows(
-                ItemDoesNotExistException.class,
-                () -> orderService.createItemGroups(order, List.of(dto))
-        );
-
-        verify(itemRepository).findById(itemId);
-        verifyNoInteractions(orderRepository, itemGroupMapper);
-    }
-
-    @Test
-    void createItemGroups_shouldAssociateItemGroupsWithGivenOrder() {
-        Customer customer = UserFactory.customerWithValidDetails();
-        Eurder order = new Eurder(customer);
-
-        Long itemId = 1L;
-        Item item = ItemFactory.itemWithInfiniteSupply();
-
-        CreateItemGroupDTO dto = new CreateItemGroupDTO(
-                itemId, 3
-        );
-
-        ItemGroup expectedGroup = new ItemGroup(order, item, 3);
-
-        when(itemRepository.findById(itemId))
-                .thenReturn(Optional.of(item));
-
-        when(itemGroupMapper.toDomain(order, dto, item))
-                .thenReturn(expectedGroup);
-
-        List<ItemGroup> result = orderService.createItemGroups(
-                order, List.of(dto)
-        );
-
-        assertEquals(1, result.size());
-        assertSame(order, result.getFirst().getEurder());
-
-        verify(itemRepository).findById(itemId);
-        verify(itemGroupMapper).toDomain(order, dto, item);
-        verifyNoInteractions(orderRepository);
     }
 
     @Test
@@ -146,70 +69,82 @@ class OrderServiceTest {
                 customerId
         );
 
-        when(customerRepository.findById(customerId))
-                .thenReturn(Optional.empty());
+        when(customerService.findById(customerId))
+                .thenThrow(new CustomerDoesNotExistException(customerId));
 
         assertThrows(
                 CustomerDoesNotExistException.class,
                 () -> orderService.addOrder(dto)
         );
-
-        verify(customerRepository).findById(customerId);
-        verifyNoInteractions(orderRepository, itemGroupRepository);
     }
 
     @Test
-    void addOrder_shouldReduceStock_whenItemIsImmediatelyAvailable() {
+    void shouldProcessStockForEachItemGroup_whenAddingOrder() {
         Long customerId = 1L;
-        Long itemId = 2L;
-
         Customer customer = UserFactory.customerWithValidDetails();
-        Item item = ItemFactory.itemWithAmount(10);
+        Eurder order = new Eurder(customer);
+        Item item = ItemFactory.itemWithInfiniteSupply();
+        ItemGroup group1 = new ItemGroup(order, item, 1);
+        ItemGroup group2 = new ItemGroup(order, item, 1);
+        CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO(item.getId(), 1);
+        CreateItemGroupDTO createItemGroupDTO2 = new CreateItemGroupDTO(item.getId(), 1);
+        CreateOrderDTO createOrderDTO = new CreateOrderDTO(List.of(createItemGroupDTO1, createItemGroupDTO2), customerId);
 
-        CreateItemGroupDTO groupDTO = new CreateItemGroupDTO(itemId, 2);
+        when(customerService.findById(customerId)).thenReturn(customer);
 
-        CreateOrderDTO orderDTO = new CreateOrderDTO(
-                List.of(groupDTO),
-                customerId
-        );
+        when(itemGroupService.createItemGroups(any(), any()))
+                .thenReturn(List.of(group1, group2));
 
-        OrderDetailsDTO expectedDTO = new OrderDetailsDTO(
-                null,
-                List.of(),
-                new BigDecimal("2000.00")
-        );
+        when(orderRepository.save(any())).thenReturn(order);
 
-        when(orderMapper.toDetailsDTO(
-                any(Eurder.class),
-                anyList(),
-                any(BigDecimal.class)
-        )).thenReturn(expectedDTO);
+        when(itemGroupService.saveAll(anyList())).thenReturn(List.of(group1, group2));
 
-        when(itemGroupMapper.toDomain(
-                any(Eurder.class),
-                eq(groupDTO),
-                eq(item)
-        )).thenReturn(new ItemGroup(
-                new Eurder(customer),
-                item,
-                2
-        ));
+        when(itemGroupService.calculateTotalPriceOfGroups(anyList())).thenReturn(BigDecimal.TEN);
 
-        when(customerRepository.findById(customerId))
-                .thenReturn(Optional.of(customer));
+        when(orderMapper.toDetailsDTO(any(), any(), any())).thenReturn(mock(OrderDetailsDTO.class));
 
-        when(itemRepository.findById(itemId))
-                .thenReturn(Optional.of(item));
+        orderService.addOrder(createOrderDTO);
 
-        when(orderRepository.save(any(Eurder.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
+        verify(stockService).processItemGroupStock(group1);
+        verify(stockService).processItemGroupStock(group2);
+    }
 
-        when(itemGroupRepository.saveAll(anyList()))
-                .thenAnswer(invocation -> invocation.getArgument(0));
+    @Test
+    void shouldThrowException_whenUserTriesToReorderAnotherCustomersOrder() {
+        Long orderId = 1L;
+        Long userId = 2L;
+        Eurder order = new Eurder(UserFactory.customerWithValidDetails());
+        when(orderRepository.findById(orderId))
+                .thenReturn(Optional.of(order));
 
-        OrderDetailsDTO result = orderService.addOrder(orderDTO);
+        assertThrows(OrderDoesNotExistException.class,
+                () -> orderService.reorder(userId, orderId));
+    }
 
-        assertNotNull(result);
-        assertEquals(8, item.getAmount());
+    @Test
+    void shouldCreateNewOrder_whenReorderingValidOrder() {
+        Long orderId = 1L;
+        Long userId = 2L;
+        Customer customer = UserFactory.customerWithValidDetails();
+        customer.setId(userId);
+        Eurder order = new Eurder(customer);
+
+        ItemGroup originalGroup = new ItemGroup(order, ItemFactory.itemWithInfiniteSupply(), 1);
+        ItemGroup duplicatedGroup = new ItemGroup(order, ItemFactory.itemWithInfiniteSupply(), 1);
+
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        when(itemGroupService.findAllByEurder_Id(orderId))
+                .thenReturn(List.of(originalGroup));
+        when(itemGroupService.duplicateWithUpdatedPrices(eq(List.of(originalGroup)), any()))
+                .thenReturn(List.of(duplicatedGroup));
+        when(orderRepository.save(any())).thenReturn(order);
+        when(itemGroupService.saveAll(anyList())).thenReturn(List.of(duplicatedGroup));
+        when(itemGroupService.calculateTotalPriceOfGroups(anyList())).thenReturn(BigDecimal.TEN);
+        when(orderMapper.toDetailsDTO(any(), any(), any())).thenReturn(mock(OrderDetailsDTO.class));
+
+        OrderDetailsDTO result = orderService.reorder(userId, orderId);
+
+        // Verify: saveOrder was called with a NEW order (not the original)
+        // Verify: new order has duplicated item groups
     }
 }

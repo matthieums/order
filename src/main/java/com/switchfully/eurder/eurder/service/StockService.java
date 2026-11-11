@@ -8,18 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-    @Service
-    @Transactional
-    public class StockService {
+@Service
+@Transactional
+public class StockService {
 
-        public void processItemGroupStock(ItemGroup group) {
-            boolean immediatelyAvailable = setShippingDateBasedOnStock(group);
-            if (immediatelyAvailable) {
-                subtractFromStock(group.getItem(), group.getAmount());
-            }
+    public void processItemGroupStock(ItemGroup group) {
+        boolean immediatelyAvailable = setShippingDateBasedOnStock(group);
+        if (immediatelyAvailable) {
+            subtractFromStock(group.getItem(), group.getAmount());
         }
+    }
 
-        private void subtractFromStock(Item item, int requiredAmount) {
+    private void subtractFromStock(Item item, int requiredAmount) {
             item.subtractAmount(requiredAmount);
         }
 
