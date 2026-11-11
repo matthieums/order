@@ -129,13 +129,10 @@ class OrderServiceTest {
         customer.setId(userId);
         Eurder order = new Eurder(customer);
 
-        ItemGroup originalGroup = new ItemGroup(order, ItemFactory.itemWithInfiniteSupply(), 1);
         ItemGroup duplicatedGroup = new ItemGroup(order, ItemFactory.itemWithInfiniteSupply(), 1);
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
-        when(itemGroupService.findAllByEurder_Id(orderId))
-                .thenReturn(List.of(originalGroup));
-        when(itemGroupService.duplicateWithUpdatedPrices(eq(List.of(originalGroup)), any()))
+        when(itemGroupService.duplicateWithUpdatedPrices(eq(order), any()))
                 .thenReturn(List.of(duplicatedGroup));
         when(orderRepository.save(any())).thenReturn(order);
         when(itemGroupService.saveAll(anyList())).thenReturn(List.of(duplicatedGroup));
@@ -145,7 +142,7 @@ class OrderServiceTest {
         orderService.reorder(userId, orderId);
 
         verify(itemGroupService).duplicateWithUpdatedPrices(
-                eq(List.of(originalGroup)),
+                eq(order),
                 argThat(newOrder -> !newOrder.equals(order))
         );
 

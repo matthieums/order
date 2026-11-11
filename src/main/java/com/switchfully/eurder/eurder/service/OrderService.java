@@ -64,18 +64,15 @@ public class OrderService {
     }
 
     public OrderDetailsDTO reorder(Long userId, Long orderId) {
-        Eurder order = findById(orderId);
+        Eurder originalOrder = findById(orderId);
 
 //        Order owner must correspond to the customer who reorders
-        if (!Objects.equals(order.getCustomer().getId(), userId)) {
+        if (!Objects.equals(originalOrder.getCustomer().getId(), userId)) {
             throw new OrderDoesNotExistException(orderId);
         }
 
-        List<ItemGroup> originalGroups = itemGroupService.findAllByEurder_Id(orderId);
-
-        Eurder newOrder = order.duplicate();
-        List<ItemGroup> newGroups = itemGroupService.duplicateWithUpdatedPrices(originalGroups, newOrder);
-
+        Eurder newOrder = originalOrder.duplicate();
+        List<ItemGroup> newGroups = itemGroupService.duplicateWithUpdatedPrices(originalOrder, newOrder);
         return saveOrder(newOrder, newGroups);
     }
 

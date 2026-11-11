@@ -53,9 +53,10 @@ public class ItemGroupService {
                 .toList();
     }
 
-    public List<ItemGroup> duplicateWithUpdatedPrices(List<ItemGroup> originals, Eurder order) {
-        return originals.stream()
-                .map(group -> group.duplicateWithUpdatedItemPrice(order))
+    public List<ItemGroup> duplicateWithUpdatedPrices(Eurder original, Eurder newOrder) {
+        List<ItemGroup> originalGroups = findAllByEurder_Id(original.getId());
+        return originalGroups.stream()
+                .map(group -> group.duplicateWithUpdatedItemPrice(newOrder))
                 .toList();
     }
 }
