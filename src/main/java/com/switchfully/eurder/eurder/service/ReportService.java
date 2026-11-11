@@ -46,33 +46,30 @@ public class ReportService {
                 .map(Eurder::getId)
                 .toList();
 
-        Map<Long, List<ItemGroup>> groupsByOrderId =
-                itemGroupService.findAllByEurder_IdIn(orderIds).stream()
-                        .collect(Collectors.groupingBy(
-                                group -> group.getEurder().getId()
-                        ));
+        Map<Long, List<ItemGroup>> groupsByOrderId = groupByOrderId(itemGroupService.findAllByEurder_IdIn(orderIds));
 
         List<OrderReportDTO> orderReportDtos = orders.stream()
                 .map(order -> reportMapper.toOrderReportDTO(
                         order.getId(),
-                        groupsByOrderId.get(order.getId()
-                )))
+                        groupsByOrderId.get(order.getId())
+                ))
                 .toList();
 
         return reportMapper.toDto(customer, orderReportDtos);
     }
 
     public List<ShippingDTO> getOrdersWithItemsShippingToday() {
-        List<ItemGroup> itemGroupsShippingToday =
-                itemGroupService.findAllByShippingDate(LocalDate.now());
-
-        Map<Long, List<ItemGroup>> groupsByOrderId = itemGroupsShippingToday.stream()
-                .collect(Collectors.groupingBy(
-                        group -> group.getEurder().getId()
-                ));
+        Map<Long, List<ItemGroup>> groupsByOrderId = groupByOrderId(itemGroupService.findAllByShippingDate(LocalDate.now()));
 
         return groupsByOrderId.values().stream()
                 .map(orderMapper::toShippingDTO)
                 .toList();
+    }
+
+    private Map<Long, List<ItemGroup>> groupByOrderId(List<ItemGroup> groups) {
+        return groups.stream()
+                .collect(Collectors.groupingBy(
+                        group -> group.getEurder().getId()
+                ));
     }
 }
