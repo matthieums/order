@@ -2,6 +2,7 @@ package com.switchfully.eurder.eurder.api;
 
 import com.switchfully.eurder.eurder.api.dtos.*;
 import com.switchfully.eurder.eurder.domain.user.Feature;
+import com.switchfully.eurder.eurder.exception.ForbiddenException;
 import com.switchfully.eurder.eurder.service.OrderService;
 import com.switchfully.eurder.eurder.service.ReportService;
 import com.switchfully.eurder.eurder.service.SecurityService;

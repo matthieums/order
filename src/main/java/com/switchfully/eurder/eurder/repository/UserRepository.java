@@ -18,5 +18,5 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    public User findByEmail(String mail);
+    User findByEmail(String email); 
 }
