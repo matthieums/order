@@ -33,10 +33,16 @@ public class SecurityService {
 
         }
 
-        String[] emailAndPassword = decodedCredentials.split( ":", 2);
+        String[] credentials = decodedCredentials.split(":", 2);
 
-        String email = emailAndPassword[0];
-        String password = emailAndPassword[1];
+        if (credentials.length != 2 ||
+                credentials[0].isBlank() ||
+                credentials[1].isBlank()) {
+            throw new UnauthorizedException();
+        }
+
+        String email = credentials[0];
+        String password = credentials[1];
 
         User user = userRepository.findByEmail(email);
 
