@@ -142,9 +142,13 @@ class OrderServiceTest {
         when(itemGroupService.calculateTotalPriceOfGroups(anyList())).thenReturn(BigDecimal.TEN);
         when(orderMapper.toDetailsDTO(any(), any(), any())).thenReturn(mock(OrderDetailsDTO.class));
 
-        OrderDetailsDTO result = orderService.reorder(userId, orderId);
+        orderService.reorder(userId, orderId);
 
-        // Verify: saveOrder was called with a NEW order (not the original)
-        // Verify: new order has duplicated item groups
+        verify(itemGroupService).duplicateWithUpdatedPrices(
+                eq(List.of(originalGroup)),
+                argThat(newOrder -> !newOrder.equals(order))
+        );
+
+        verify(stockService).processItemGroupStock(duplicatedGroup);
     }
 }
