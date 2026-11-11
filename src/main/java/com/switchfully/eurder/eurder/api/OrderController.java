@@ -45,7 +45,10 @@ public class OrderController {
     @ApiResponse(responseCode = "404", description = "Customer not found")
     @ResponseStatus(HttpStatus.OK)
     public ReportDTO viewReport(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long id) {
-        securityService.validateAuthorization(authorization, Feature.VIEW_REPORT);
+        Long userId = securityService.validateAuthorization(authorization, Feature.VIEW_REPORT);
+        if (!userId.equals(id)) {
+            throw new ForbiddenException();
+        }
         return reportService.getReportForCustomerWithId(id);
     }
 
