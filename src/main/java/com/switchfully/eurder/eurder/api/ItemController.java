@@ -2,6 +2,7 @@ package com.switchfully.eurder.eurder.api;
 
 import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
+import com.switchfully.eurder.eurder.domain.UrgencyLevel;
 import com.switchfully.eurder.eurder.domain.user.Feature;
 import com.switchfully.eurder.eurder.service.ItemService;
 import com.switchfully.eurder.eurder.service.SecurityService;
@@ -51,4 +52,18 @@ public class ItemController {
         securityService.validateAuthorization(authorization, Feature.UPDATE_ITEM);
         return itemService.updateItem(id, createItemDTO);
     }
+
+    @GetMapping(value = "overview", produces = APPLICATION_JSON)
+    @Operation(summary = "Get stock overview of items", description = "Get stock overview of items ordered by resupply urgency")
+    @ApiResponse(responseCode = "200", description = "Items with specified urgency retrieved")
+    @ApiResponse(responseCode = "401", description = "Unauthorized - invalid authorization header")
+    @ApiResponse(responseCode = "403", description = "Forbidden - insufficient permissions")
+    @ApiResponse(responseCode = "404", description = "No items found for the requested supply urgency")
+    public List<ItemDTO> getItemsWithUrgency(
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @RequestParam(name = "level", required = false) UrgencyLevel urgency
+    ) {
+        securityService.validateAuthorization(authorization, Feature.GET_ITEM_OVERVIEW);
+        return itemService.getOverview(urgency);
+    };
 }

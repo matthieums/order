@@ -59,6 +59,18 @@ public class Item {
         return amount;
     }
 
+    public UrgencyLevel getUrgency() {
+            if (amount < 5) {
+                return UrgencyLevel.STOCK_LOW;
+            }
+
+            if (amount < 10) {
+                return UrgencyLevel.STOCK_MEDIUM;
+            }
+
+            return UrgencyLevel.STOCK_HIGH;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

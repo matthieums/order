@@ -3,12 +3,16 @@ package com.switchfully.eurder.eurder.service;
 import com.switchfully.eurder.eurder.api.dtos.CreateItemDTO;
 import com.switchfully.eurder.eurder.api.dtos.ItemDTO;
 import com.switchfully.eurder.eurder.domain.Item;
+import com.switchfully.eurder.eurder.domain.UrgencyLevel;
 import com.switchfully.eurder.eurder.exception.ItemDoesNotExistException;
 import com.switchfully.eurder.eurder.mapper.ItemMapper;
 import com.switchfully.eurder.eurder.repository.ItemRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @Transactional
@@ -45,4 +49,13 @@ public class ItemService {
                 .orElseThrow(() ->
                         new ItemDoesNotExistException(id));
     }
+
+    public List<ItemDTO> getOverview(UrgencyLevel urgency) {
+        return itemRepository.findAll().stream()
+                .filter(item -> urgency == null || item.getUrgency() == urgency)
+                .sorted(Comparator.comparing(Item::getUrgency))
+                .map(itemMapper::toDTO)
+                .toList();
+    }
+
 }
