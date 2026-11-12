@@ -131,4 +131,25 @@ public class ItemControllerIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
+
+    @Test
+    void getOverview_shouldRejectRequest_whenNoAuthorization() {
+        given()
+                .contentType("application/json")
+                .when()
+                .get("items/overview")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    void getOverview_shouldReturnOverview_whenAuthorization() {
+        given()
+                .auth().preemptive().basic(admin.getEmail(), admin.getPassword())
+                .contentType("application/json")
+                .when()
+                .get("items/overview")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
 }
