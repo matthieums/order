@@ -12,6 +12,15 @@ describe('ItemCard', () => {
 
     fixture = TestBed.createComponent(ItemCard);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('item', {
+      id: 1,
+      name: 'Angular',
+      description: 'Angular framework',
+      price: 20,
+      amountOfStock: 10,
+      stockUrgency: 'LOW'
+    });
+
     await fixture.whenStable();
   });
 

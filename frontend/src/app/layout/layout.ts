@@ -5,7 +5,7 @@ import {RouterOutlet} from '@angular/router';
 import {ItemOverview} from '../item-overview/item-overview';
 
 @Component({
-  imports: [Footer, Header, ItemOverview, RouterOutlet],
+  imports: [Footer, Header, RouterOutlet],
   selector: 'app-layout',
   styleUrl: './layout.css',
   templateUrl: './layout.html',

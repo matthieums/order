@@ -33,7 +33,8 @@ describe('ItemService', () => {
         name: 'An item',
         description: 'Really just an item',
         price: 1.0,
-        amountOfStock: 10
+        amountOfStock: 10,
+        stockUrgency: 'LOW'
       }
     ]
 

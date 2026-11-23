@@ -1,10 +1,23 @@
 <section id="items-overview" class="py-4">
+  <div class="container">
+    <input
+      #filterInput
+      [value]="filterTerm()"
+      (input)="filterTerm.set(filterInput.value)"
+      class="form-control mb-3"
+      placeholder="Filter by name..."
+      aria-label="Filter"
+    >
+  </div>
+
   <div class="container px-3 px-lg-5">
     <div class="row g-3">
-      @for (item of items.value(); track item.id) {
+      @for (item of filteredItems(); track item.id) {
         <div class="col-12 col-md-4">
           <app-item-card [item]="item" />
         </div>
+      } @empty {
+        <p>No items found.</p>
       }
     </div>
   </div>
