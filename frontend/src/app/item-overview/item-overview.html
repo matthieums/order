@@ -1,0 +1,11 @@
+<section id="items-overview" class="py-4">
+  <div class="container px-3 px-lg-5">
+    <div class="row g-3">
+      @for (item of items.value(); track item.id) {
+        <div class="col-12 col-md-4">
+          <app-item-card [item]="item" />
+        </div>
+      }
+    </div>
+  </div>
+</section>
