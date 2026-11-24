@@ -4,11 +4,13 @@ import {CreateItemRequest} from '../model/CreateItemRequest';
 import {form, FormField, FormRoot, maxLength, min, required, validate} from '@angular/forms/signals';
 import {firstValueFrom} from 'rxjs';
 import {Router} from '@angular/router';
+import {Counter} from '../counter/counter';
 
 @Component({
   imports: [
     FormField,
-    FormRoot
+    FormRoot,
+    Counter
   ],
   selector: 'app-create-item',
   styleUrl: './create-item.css',

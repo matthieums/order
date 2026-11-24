@@ -26,6 +26,8 @@
         class="form-control"
         [formField]="createItemForm.description"
       ></textarea>
+      <div><app-counter [text]="createItemForm.description().value()"
+      /></div>
 
       @if (createItemForm.description().touched()) {
         @for (error of createItemForm.description().errors(); track error) {
