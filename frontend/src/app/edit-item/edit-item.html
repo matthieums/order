@@ -1,0 +1,96 @@
+<div class="container">
+  <form [formRoot]="updateItemForm">
+    <div class="row g-3">
+
+      <div class="col-12">
+        <label for="itemName" class="form-label">Name</label>
+        <input
+          id="itemName"
+          class="form-control"
+          type="text"
+          [formField]="updateItemForm.name"
+        >
+        @if (updateItemForm.name().touched()) {
+          @for (error of updateItemForm.name().errors(); track error) {
+            <div class="invalid-feedback d-block">
+              {{ error.message }}
+            </div>
+          }
+        }
+      </div>
+
+      <div class="col-12">
+        <label for="itemDescription" class="form-label">Description</label>
+        <textarea
+          id="itemDescription"
+          class="form-control"
+          [formField]="updateItemForm.description"
+        ></textarea>
+        <div><app-counter [text]="updateItemForm.description().value()"
+        /></div>
+
+        @if (updateItemForm.description().touched()) {
+          @for (error of updateItemForm.description().errors(); track error) {
+            <div class="invalid-feedback d-block">
+              {{ error.message }}
+            </div>
+          }
+        }
+      </div>
+
+      <div class="col-6 col-md-3">
+        <label for="itemPrice" class="form-label">Price</label>
+        <div class="input-group">
+          <span class="input-group-text">€</span>
+          <input
+            id="itemPrice"
+            class="form-control"
+            type="number"
+            [formField]="updateItemForm.price"
+          >
+        </div>
+
+        @if (updateItemForm.price().touched()) {
+          @for (error of updateItemForm.price().errors(); track error) {
+            <div class="invalid-feedback d-block">
+              {{ error.message }}
+            </div>
+          }
+        }
+      </div>
+
+      <div class="col-6 col-md-3">
+        <label for="itemStock" class="form-label">Stock amount</label>
+        <input
+          id="itemStock"
+          class="form-control"
+          type="number"
+          [formField]="updateItemForm.amountOfStock"
+        >
+
+        @if (updateItemForm.amountOfStock().touched()) {
+          @for (error of updateItemForm.amountOfStock().errors(); track error) {
+            <div class="invalid-feedback d-block">
+              {{ error.message }}
+            </div>
+          }
+        }
+      </div>
+
+      <div class="d-flex gap-2">
+        <button
+          class="btn btn-success flex-grow-1"
+          type="submit"
+          [disabled]="updateItemForm().invalid()"
+        >
+          Confirm update
+        </button>
+
+        <a [routerLink]="['/']"><button class="btn btn-light" type="button">
+          Cancel
+        </button></a>
+      </div>
+
+    </div>
+  </form>
+</div>

@@ -43,7 +43,7 @@
 
 
     <div class="d-flex gap-2">
-      <a [routerLink]="['/items']" class="btn btn-primary">
+      <a [routerLink]="['/items/', currentItem.id, 'edit']" class="btn btn-primary">
         Edit
       </a>
       <a [routerLink]="['/items']" class="btn btn-light">

@@ -4,6 +4,7 @@ import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {Item} from '../model/Item';
 import {CreateItemRequest} from '../model/CreateItemRequest';
+import {UpdateItemRequest} from '../model/UpdateItemRequest';
 
 @Service()
 export class ItemService {
@@ -21,8 +22,14 @@ export class ItemService {
   createItem(item: CreateItemRequest) {
     return this.http.post<Item>(
       this.itemsUrl,
-    item
+      item
+    );
+}
+
+  updateItem(item: UpdateItemRequest, id: string) {
+    return this.http.put<Item>(
+      this.itemsUrl + `/${id}`,
+      item
     );
   }
-
 }
