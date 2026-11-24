@@ -8,7 +8,6 @@ import {CreateItem} from '../create-item/create-item';
 @Component({
   imports: [
     ItemCard,
-    CreateItem
   ],
   selector: 'app-item-overview',
   styleUrl: './item-overview.css',
