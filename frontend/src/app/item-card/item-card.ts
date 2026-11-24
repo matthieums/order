@@ -1,8 +1,11 @@
 import {Component, input, signal, WritableSignal} from '@angular/core';
 import {Item} from '../model/Item';
+import {RouterLink} from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   selector: 'app-item-card',
   styleUrl: './item-card.css',
   templateUrl: './item-card.html',

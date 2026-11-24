@@ -3,14 +3,15 @@ import {ItemService} from '../service/item-service';
 import {CreateItemRequest} from '../model/CreateItemRequest';
 import {form, FormField, FormRoot, maxLength, min, required, validate} from '@angular/forms/signals';
 import {firstValueFrom} from 'rxjs';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {Counter} from '../counter/counter';
 
 @Component({
   imports: [
     FormField,
     FormRoot,
-    Counter
+    Counter,
+    RouterLink
   ],
   selector: 'app-create-item',
   styleUrl: './create-item.css',

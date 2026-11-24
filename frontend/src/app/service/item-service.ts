@@ -14,10 +14,15 @@ export class ItemService {
     return this.http.get<Item[]>(this.itemsUrl);
   }
 
+  getItem(id: string): Observable<Item> {
+    return this.http.get<Item>(this.itemsUrl + '/' + id);
+  }
+
   createItem(item: CreateItemRequest) {
     return this.http.post<Item>(
-      environment.backendUrl + '/items',
+      this.itemsUrl,
     item
     );
   }
+
 }

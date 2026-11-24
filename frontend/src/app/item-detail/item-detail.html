@@ -1,0 +1,56 @@
+<div class="container">
+
+@if (item.isLoading()) {
+  <p>Loading item...</p>
+} @else if (item.error()) {
+  <div class="alert alert-danger">
+    Could not load item.
+  </div>
+} @else if (item.value(); as currentItem) {
+
+  <div class="row g-3">
+
+    <div class="col-12">
+      <label class="form-label">Name</label>
+      <div class="form-control bg-light">
+        {{ currentItem.name }}
+      </div>
+    </div>
+
+    <div class="col-12">
+      <label class="form-label">Description</label>
+      <div class="form-control bg-light">
+        {{ currentItem.description }}
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <label class="form-label">Price</label>
+      <div class="input-group">
+        <span class="input-group-text">€</span>
+        <div class="form-control bg-light">
+          {{ currentItem.price }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <label class="form-label">Stock amount</label>
+      <div class="form-control bg-light">
+        {{ currentItem.amountOfStock }}
+      </div>
+    </div>
+
+
+    <div class="d-flex gap-2">
+      <a [routerLink]="['/items']" class="btn btn-primary">
+        Edit
+      </a>
+      <a [routerLink]="['/items']" class="btn btn-light">
+        Back
+      </a>
+    </div>
+
+  </div>
+}
+</div>
