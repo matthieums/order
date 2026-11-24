@@ -19,9 +19,12 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link active" href="#">Home</a>-->
-<!--        </li>-->
+        <li class="nav-item">
+          <a [routerLink]="['items']" class="nav-link active" >Overview</a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['items/create']" class="nav-link active" >Create an item</a>
+        </li>
 <!--        <li class="nav-item">-->
 <!--          <a class="nav-link" href="#">Features</a>-->
 <!--        </li>-->
