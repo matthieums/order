@@ -3,10 +3,12 @@ import {ItemService} from '../service/item-service';
 import {Item} from '../model/Item';
 import {rxResource} from '@angular/core/rxjs-interop';
 import {ItemCard} from '../item-card/item-card';
+import {CreateItem} from '../create-item/create-item';
 
 @Component({
   imports: [
-    ItemCard
+    ItemCard,
+    CreateItem
   ],
   selector: 'app-item-overview',
   styleUrl: './item-overview.css',

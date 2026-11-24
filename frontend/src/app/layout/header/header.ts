@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   styleUrl: './header.css',
   templateUrl: './header.html',
 })
-export class Header {}
+export class Header {
+  protected readonly imageSource = "img/order-icon.png";
+}

@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {Item} from '../model/Item';
+import {CreateItemRequest} from '../model/CreateItemRequest';
 
 @Service()
 export class ItemService {
@@ -11,5 +12,12 @@ export class ItemService {
 
   getItems(): Observable<Item[]> {
     return this.http.get<Item[]>(this.itemsUrl);
+  }
+
+  createItem(item: CreateItemRequest) {
+    return this.http.post<Item>(
+      environment.backendUrl + '/items',
+    item
+    );
   }
 }

@@ -1,0 +1,93 @@
+
+<form [formRoot]="createItemForm">
+  <div class="row g-3">
+
+    <div class="col-12">
+      <label for="itemName" class="form-label">Name</label>
+      <input
+        id="itemName"
+        class="form-control"
+        type="text"
+        [formField]="createItemForm.name"
+      >
+      @if (createItemForm.name().touched()) {
+        @for (error of createItemForm.name().errors(); track error) {
+          <div class="invalid-feedback d-block">
+            {{ error.message }}
+          </div>
+        }
+      }
+    </div>
+
+    <div class="col-12">
+      <label for="itemDescription" class="form-label">Description</label>
+      <textarea
+        id="itemDescription"
+        class="form-control"
+        [formField]="createItemForm.description"
+      ></textarea>
+
+      @if (createItemForm.description().touched()) {
+        @for (error of createItemForm.description().errors(); track error) {
+          <div class="invalid-feedback d-block">
+            {{ error.message }}
+          </div>
+        }
+      }
+    </div>
+
+    <div class="col-6 col-md-3">
+      <label for="itemPrice" class="form-label">Price</label>
+      <div class="input-group">
+        <span class="input-group-text">€</span>
+        <input
+          id="itemPrice"
+          class="form-control"
+          type="number"
+          [formField]="createItemForm.price"
+        >
+      </div>
+
+      @if (createItemForm.price().touched()) {
+        @for (error of createItemForm.price().errors(); track error) {
+          <div class="invalid-feedback d-block">
+            {{ error.message }}
+          </div>
+        }
+      }
+    </div>
+
+    <div class="col-6 col-md-3">
+      <label for="itemStock" class="form-label">Stock amount</label>
+      <input
+        id="itemStock"
+        class="form-control"
+        type="number"
+        [formField]="createItemForm.amountOfStock"
+      >
+
+      @if (createItemForm.amountOfStock().touched()) {
+        @for (error of createItemForm.amountOfStock().errors(); track error) {
+          <div class="invalid-feedback d-block">
+            {{ error.message }}
+          </div>
+        }
+      }
+    </div>
+
+    <div class="d-flex gap-2">
+      <button
+        class="btn btn-success flex-grow-1"
+        type="submit"
+        [disabled]="createItemForm().invalid()"
+      >
+        Create
+      </button>
+
+      <button class="btn btn-light" type="button">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</form>
